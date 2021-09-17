@@ -7,12 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import frc.robot.subsystems.Drivetrain;
 
 public class Robot extends TimedRobot {
 
-    DrivetrainSubsystem _drive;
+    Drivetrain _drive;
 
     private final Joystick driver = new Joystick(0);
 
@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Initialize robot subsystems
-        _drive = new DrivetrainSubsystem();
+        _drive = new Drivetrain();
     }
 
     /**
