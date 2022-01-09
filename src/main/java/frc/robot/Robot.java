@@ -4,10 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick;  
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.Drivetrain;
 
 public class Robot extends TimedRobot {
@@ -42,9 +41,9 @@ public class Robot extends TimedRobot {
         // Run drivetrain
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
-                          driver.getY(GenericHID.Hand.kLeft),
-                          driver.getX(GenericHID.Hand.kLeft),
-                          driver.getY(GenericHID.Hand.kRight),
+                          driver.getY(),
+                          driver.getX(),
+                          driver.getY(),
                           _drive.getGyroscopeRotation()));
     }
 }
