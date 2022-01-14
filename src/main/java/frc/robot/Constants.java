@@ -5,8 +5,8 @@
 package frc.robot;
 
 public final class Constants {
-    public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.6096; // FIXME Measure and set trackwidth
-    public static final double DRIVETRAIN_WHEELBASE_METERS = 0.6096; // FIXME Measure and set wheelbase
+    public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.6096;
+    public static final double DRIVETRAIN_WHEELBASE_METERS = 0.6096;
 
     public static final int DRIVETRAIN_PIGEON_ID = 0; // FIXME Set Pigeon ID
 
