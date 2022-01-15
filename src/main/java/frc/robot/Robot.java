@@ -69,5 +69,14 @@ public class Robot extends TimedRobot {
                           driver.getX(),
                           driver.getY(),
                           _drive.getGyroscopeRotation()));
+
+        // Run intake
+        _intake.teleopPeriodic();
+
+        // Run lifter
+        _lifter.teleopPeriodic();
+
+        // Run shooter
+        _shooter.teleopPeriodic();
     }
 }
