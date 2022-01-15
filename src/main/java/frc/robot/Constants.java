@@ -29,4 +29,11 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 0; // FIXME Set back right steer motor ID
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 0; // FIXME Set back right steer encoder ID
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set back right steer offset
+
+    // FIXME Assuming we use two motors for the intake/shooter modules
+    public static final int LEFT_INTAKE_MOTOR = 0;
+    public static final int RIGHT_INTAKE_MOTOR = 0;
+    
+    public static final int LEFT_SHOOTER_MOTOR = 0;
+    public static final int RIGHT_SHOOTER_MOTOR = 0;
 }

@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
 
-public class Intake {
+public class Shooter {
 
-    public Intake()
+    public Shooter()
     {
         /** Motor speeds will be reported in dashboard later */
     }
