@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Robot;
 
 import static frc.robot.Constants.*;
 
@@ -8,6 +9,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Shooter {
+
+    private final Robot robot;
 
     /**
      * Motors are currently initialized as CAN-Spark Max, but this might
@@ -19,15 +22,29 @@ public class Shooter {
 
     public Shooter()
     {
+        robot = new Robot();
+
         /** Motor speeds will be reported in dashboard later */
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
     
-    private final Joystick operatorJoystick = new Joystick(OPERATOR_JOYSTICK_ID);
+    private final XboxController operatorController = new XboxController(OPERATOR_JOYSTICK_ID);
+
+    /** Motor speed variables */
+    private double shooterSpeed = 0.85;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
-        // Fill later
+        
+        // Check input from right trigger
+        if (operatorController.getRightTriggerAxis() > 0.2) {
+            runShooter();
+        }
+    }
+
+    public void runShooter() {
+        leftShooterMotor.set(shooterSpeed);
+        rightShooterMotor.set(robot.invert(shooterSpeed));
     }
 }

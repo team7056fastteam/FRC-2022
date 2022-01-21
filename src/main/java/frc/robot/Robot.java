@@ -79,4 +79,9 @@ public class Robot extends TimedRobot {
         // Run shooter
         _shooter.teleopPeriodic();
     }
+
+    // Simple function to invert motor speeds without error
+    public double invert(double value) {
+        return (value * (-1));
+    }
 }
