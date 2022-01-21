@@ -20,8 +20,8 @@ public class Shooter {
     public Shooter()
     {
         /** Motor speeds will be reported in dashboard later */
-        leftShooterMotor = new CANSparkMax(LEFT_SHOOTER_MOTOR, MotorType.kBrushless);
-        rightShooterMotor = new CANSparkMax(RIGHT_SHOOTER_MOTOR, MotorType.kBrushless);
+        leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
+        rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
     
     private final Joystick operatorJoystick = new Joystick(OPERATOR_JOYSTICK_ID);
