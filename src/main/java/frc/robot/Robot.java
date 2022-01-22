@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                           driver.getY(),
                           driver.getX(),
-                          driver.getY(),
+                          driver.getZ(),
                           getGyroscopeRotation2d()));
     }
 }

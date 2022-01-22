@@ -35,12 +35,7 @@ class NavPodUpdate
 
 public class NavPod extends Thread
 {
-    private double _x = 0;
-    private double _sx = 0;
-    private double _y = 0;
-    private double _sy = 0;
-    private double _h = 0;
-
+    
     private ReentrantLock               _lock = null;
     private Condition                   _signal = null;
     private SerialPort                  _serialPort = null;
@@ -50,8 +45,7 @@ public class NavPod extends Thread
 	private Hashtable<String, String>	_requestReply = null;
 	private byte				        _requestTag = 0;
 	private byte				        _nextTag = 1;
-	private int				            _version = 0;
-    private Consumer<NavPodUpdate>      _callback = null;
+	private Consumer<NavPodUpdate>      _callback = null;
 
 
     public NavPod()
@@ -218,7 +212,7 @@ public class NavPod extends Thread
         
         if (_request(reply, "PING", null) && reply.containsKey("VERS"))
         {
-            _version = Integer.parseInt(reply.get("VERS"));
+            Integer.parseInt(reply.get("VERS"));
             success = true;
         }
         
