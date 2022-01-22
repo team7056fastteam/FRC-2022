@@ -83,6 +83,24 @@ public class Robot extends TimedRobot {
         }
     }
 
+    public double deadband(double value, double deadband) {
+        // Deadband value (should stay between 0.05 -> 0.25)
+    
+        if (Math.abs(value) < deadband) {
+          return 0;
+        }
+        
+        if (value > 0) {
+          value = (value - deadband) / (1.0 - deadband);
+        }
+        
+        else {
+          value = -((-value - deadband) / (1.0 - deadband));
+        }
+    
+        return value;
+      }
+
     /**
     * This function is called every robot packet, no matter the mode. Use this for items like
     * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
@@ -106,7 +124,7 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
-        // TODO Create autonomous programs
+
     }
 
     /** This function is called periodically during operator control. */
