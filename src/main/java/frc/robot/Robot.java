@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
 
     private final Joystick driver = new Joystick(0);
     private final Timer timer = new Timer();
-
+    
     // Static variables
     double gyroRotation;
     double navX;
@@ -182,8 +182,8 @@ public class Robot extends TimedRobot {
         // Run drivetrain
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
-                          driver.getY(),
                           driver.getX(),
+                          driver.getY(),
                           driver.getZ(),
                           getGyroscopeRotation2d()));
     }

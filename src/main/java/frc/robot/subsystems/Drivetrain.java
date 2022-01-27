@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
+import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -36,7 +37,9 @@ public class Drivetrain {
    * <p>
    * This is a measure of how fast the robot should be able to drive in a straight line.
    */
-  public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 / 8.16 * 0.1016 * Math.PI;
+  public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
+          SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
+          SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
   /**
    * The maximum angular velocity of the robot in radians per second.
    * <p>
@@ -66,6 +69,8 @@ public class Drivetrain {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
+
+  private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
   public Drivetrain() {
 
@@ -141,8 +146,8 @@ public class Drivetrain {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
-    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
     m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
     m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
