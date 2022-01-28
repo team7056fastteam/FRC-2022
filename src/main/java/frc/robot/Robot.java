@@ -17,6 +17,7 @@ public class Robot extends TimedRobot {
     Intake _intake;
     Lifter _lifter;
     Shooter _shooter;
+    Limelight _limelight;
 
     NavPod _navpod;
 
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
         _intake = new Intake();
         _lifter = new Lifter();
         _shooter = new Shooter();
+        _limelight = new Limelight();
 
         // NavPod initialization
         _navpod = new NavPod();
@@ -81,6 +83,8 @@ public class Robot extends TimedRobot {
             navX = update.x;
             navY = update.y;
         }
+
+        _limelight.robotInit();
     }
 
     public double deadband(double value, double deadband) {
@@ -125,6 +129,8 @@ public class Robot extends TimedRobot {
 
         /** Start autonomous clock */
         timer.start();
+
+        _limelight.autonomousInit();
     }
 
     /** This function is called periodically during autonomous. */

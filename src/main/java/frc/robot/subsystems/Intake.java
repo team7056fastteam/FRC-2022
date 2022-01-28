@@ -1,3 +1,7 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -43,6 +47,9 @@ public class Intake {
 
     private boolean invertConveyor;
 
+    private boolean hasCounted = false;
+    private int counter = 0;
+
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
 
@@ -52,6 +59,9 @@ public class Intake {
             runIntake();
             runConv();
         }
+        else {
+            hasCounted = false;
+        }
 
         // Check input for A button
         if (operatorController.getBButton()) { 
@@ -59,6 +69,22 @@ public class Intake {
         }
         else {
             invertConveyor = false;
+        }
+
+        // Check how many balls are counted
+        if (counter == 1) {
+            // LED on 1
+        }
+        else if (counter == 2) {
+            // LED on 2
+        }
+        else if (counter == 3) {
+
+            // Stop int from wrapping over 2
+            counter = 0;
+        }
+        else {
+            // LED off
         }
     }
 
@@ -81,6 +107,8 @@ public class Intake {
          * [Intake switch, Conveyor switch]
          * 0 - No cargo
          * 1 - Cargo
+         * 
+         * The current system relies on two 
         */
 
         if (invertConveyor) {
@@ -100,10 +128,20 @@ public class Intake {
             // Case [0, 1]
             else if (cargoInIntake && !cargoInConveyor) {
                 conveyorMotor.set(0);
+
+                if (!hasCounted) {
+                    hasCounted = true;
+                    counter++;
+                }
             }
             // Case [1, 1]
             else {
                 conveyorMotor.set(conveyorSpeed);
+
+                if (!hasCounted) {
+                    hasCounted = true;
+                    counter++;
+                }
             }
         }
     }
@@ -111,6 +149,4 @@ public class Intake {
     public void runConvInverted() {
         conveyorMotor.set(robot.invert(conveyorSpeed));
     }
-
-    
 }

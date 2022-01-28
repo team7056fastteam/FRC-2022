@@ -59,8 +59,10 @@ public final class Constants {
     public static final int ANGLE_LEFT_MOTOR = 16;
     public static final int ANGLE_RIGHT_MOTOR = 17;
 
-    /** Limit Switch Constants */
+    /** Digital Input Constants */
     
     public static final int INTAKE_LIMIT_SWITCH = 0;
-    public static final int CONVEYOR_LIMIT_SWITCH = 0;
+    public static final int CONVEYOR_LIMIT_SWITCH = 1;
+
+    public static final int LED_CHANNEL = 2;
 }
