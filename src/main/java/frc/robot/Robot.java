@@ -107,7 +107,13 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void robotPeriodic() {
-        // TODO Run diagnostics
+        // Check if NavPod has been initialized
+        if ((_navpod != null) && _navpod.isValid()) {
+
+            // Update console with NavPod info every 10ms
+            _navpod.setAutoUpdate(0.1, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
+            update.h, update.x, update.sx, update.y, update.sy));
+        }
     }
 
     /** This function is run once each time the robot enters autonomous mode. */
@@ -134,9 +140,9 @@ public class Robot extends TimedRobot {
         // Run drivetrain
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
-                          driver.getY(),
-                          driver.getX(),
-                          driver.getY(),
+                          deadband(driver.getY(), .05),
+                          deadband(driver.getX(), .05),
+                          deadband(driver.getY(), .05),
                           getGyroscopeRotation2d()));
 
         // Run intake
@@ -163,28 +169,4 @@ public class Robot extends TimedRobot {
 
     /** This function sets the relative position of the robot */
     public void setDefaultPosition(double x, double y) { _navpod.resetXY(x, y); }
-
-    /** This function is called periodically during test mode. */
-    @Override
-    public void testPeriodic()
-    {
-        // Run NavPod diagnostics
-        if ((_navpod != null) && _navpod.isValid())
-        {
-            NavPodUpdate update = _navpod.getUpdate();
-            if (update != null)
-            {
-                System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
-                    update.h, update.x, update.sx, update.y, update.sy);
-            }
-        }
-
-        // Run drivetrain
-        _drive.drive(
-                  ChassisSpeeds.fromFieldRelativeSpeeds(
-                          driver.getX(),
-                          driver.getY(),
-                          driver.getZ(),
-                          getGyroscopeRotation2d()));
-    }
 }

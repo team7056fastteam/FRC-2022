@@ -91,7 +91,7 @@ public class Intake {
             
             // Case [0, 0]
             if (!cargoInIntake && !cargoInConveyor) {
-                conveyorMotor.set(0);
+                conveyorMotor.set(conveyorSpeed);
             }
             // Case [1, 0]
             else if (!cargoInIntake && cargoInConveyor) {
@@ -102,11 +102,6 @@ public class Intake {
                 conveyorMotor.set(0);
             }
             // Case [1, 1]
-            else if (cargoInIntake && cargoInConveyor) {
-                conveyorMotor.set(conveyorSpeed);
-            }
-            // No case, this shouldn't happen but it is possible
-            // Override to force ball to limit switch
             else {
                 conveyorMotor.set(conveyorSpeed);
             }
