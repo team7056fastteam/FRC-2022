@@ -45,6 +45,7 @@ public class Robot extends TimedRobot {
         // NavPod initialization
         _navpod = new NavPod();
 
+        /*
         // Check if the NavPod is connected to RoboRIO
         if (_navpod.isValid())
         {
@@ -83,6 +84,7 @@ public class Robot extends TimedRobot {
             navX = update.x;
             navY = update.y;
         }
+        */
 
         _limelight.robotInit();
     }
@@ -146,9 +148,9 @@ public class Robot extends TimedRobot {
         // Run drivetrain
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
-                          deadband(driver.getY(), .05),
-                          deadband(driver.getX(), .05),
-                          deadband(driver.getY(), .05),
+                          driver.getY(),
+                          driver.getX(),
+                          driver.getY(),
                           getGyroscopeRotation2d()));
 
         // Run intake

@@ -21,16 +21,16 @@ public class Shooter {
      * change in the future. If using a Talon SRX, change the static
      * initialized controllers from CANSparkMax to TalonSRX
      */
-    private final CANSparkMax leftShooterMotor;
-    private final CANSparkMax rightShooterMotor;
+    //private final CANSparkMax leftShooterMotor;
+    //private final CANSparkMax rightShooterMotor;
 
     public Shooter()
     {
         robot = new Robot();
 
         /** Motor speeds will be reported in dashboard later */
-        leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
-        rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
+        //leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
+        //rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
     
     private final XboxController operatorController = new XboxController(OPERATOR_JOYSTICK_ID);
@@ -48,7 +48,7 @@ public class Shooter {
     }
 
     public void runShooter() {
-        leftShooterMotor.set(shooterSpeed);
-        rightShooterMotor.set(robot.invert(shooterSpeed));
+        //leftShooterMotor.set(shooterSpeed);
+        //rightShooterMotor.set(robot.invert(shooterSpeed));
     }
 }
