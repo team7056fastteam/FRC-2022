@@ -45,14 +45,13 @@ public class Robot extends TimedRobot {
         // NavPod initialization
         _navpod = new NavPod();
 
-        /*
         // Check if the NavPod is connected to RoboRIO
         if (_navpod.isValid())
         {
             NavPodConfig config = new NavPodConfig();
             config.cableMountAngle = 270;
             config.fieldOrientedEnabled = true;
-            config.initialHeadingAngle = 90;
+            config.initialHeadingAngle = 0;
             config.mountOffsetX = 0;
             config.mountOffsetY = 4.25;
             config.rotationScaleFactorX = 0.0675;
@@ -76,36 +75,36 @@ public class Robot extends TimedRobot {
 
             setGyroscopeHeading(90);
             setDefaultPosition(0, 0);
-            
-            // _navpod.setAutoUpdate(.1, update -> gyroRotation = update.h);
-            NavPodUpdate update = _navpod.getUpdate();
 
-            gyroRotation = update.h;
-            navX = update.x;
-            navY = update.y;
+            // Update console with NavPod info every 10ms
+            _navpod.setAutoUpdate(0.5, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
+            update.h, update.x, update.sx, update.y, update.sy));
         }
-        */
 
         _limelight.robotInit();
     }
 
-    public double deadband(double value, double deadband) {
-        // Deadband value (should stay between 0.05 -> 0.25)
-    
-        if (Math.abs(value) < deadband) {
-          return 0;
+    private static double deadband(double value, double deadband) {
+      if (Math.abs(value) > deadband) {
+            if (value > 0.0) {
+                return (value - deadband) / (1.0 - deadband);
+            } else {
+                return (value + deadband) / (1.0 - deadband);
+            }
+        } else {
+            return 0.0;
         }
-        
-        if (value > 0) {
-          value = (value - deadband) / (1.0 - deadband);
-        }
-        
-        else {
-          value = -((-value - deadband) / (1.0 - deadband));
-        }
-    
-        return value;
-      }
+    }
+
+    private static double modifyAxis(double value) {
+      // Deadband
+      value = deadband(value, 0.3);
+
+      // Square the axis
+      value = Math.copySign(value * value, value);
+
+      return value;
+  }
 
     /**
     * This function is called every robot packet, no matter the mode. Use this for items like
@@ -115,10 +114,11 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         // Check if NavPod has been initialized
         if ((_navpod != null) && _navpod.isValid()) {
+            NavPodUpdate update = _navpod.getUpdate();
 
-            // Update console with NavPod info every 10ms
-            _navpod.setAutoUpdate(0.1, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
-            update.h, update.x, update.sx, update.y, update.sy));
+            gyroRotation = update.h;
+            navX = update.x;
+            navY = update.y;
         }
     }
 
@@ -144,14 +144,26 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        double throttle = (driver.getRawAxis(3) * -0.5) + .5;
 
-        // Run drivetrain
+        double xPercent = throttle * -modifyAxis(driver.getRawAxis(1));
+        double yPercent = throttle * -modifyAxis(driver.getRawAxis(0));
+        double zPercent = throttle * -modifyAxis(driver.getRawAxis(2));
+        
+        // Field Relative Drive
+        /*
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
-                          driver.getY(),
-                          driver.getX(),
-                          driver.getY(),
-                          getGyroscopeRotation2d()));
+                          xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                          yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                          zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+                          _drive.getRotation()));
+        */
+        _drive.drive(
+                  new ChassisSpeeds(
+                          xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                          yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                          zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
         // Run intake
         _intake.teleopPeriodic();
@@ -177,4 +189,9 @@ public class Robot extends TimedRobot {
 
     /** This function sets the relative position of the robot */
     public void setDefaultPosition(double x, double y) { _navpod.resetXY(x, y); }
+
+    @Override
+    public void disabledInit() {
+        _drive.drive(new ChassisSpeeds(0, 0, 0));
+    }
 }
