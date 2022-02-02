@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Shooter {
 
     private final Robot robot;
+    double currentTime;
 
     /**
      * Motors are currently initialized as CAN-Spark Max, but this might
@@ -27,6 +28,7 @@ public class Shooter {
     public Shooter()
     {
         robot = new Robot();
+        currentTime = robot.getCurrentTime();
 
         /** Motor speeds will be reported in dashboard later */
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);

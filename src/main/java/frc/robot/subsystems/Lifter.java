@@ -4,18 +4,26 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Robot;
 
-import static frc.robot.Constants.*;
+//import static frc.robot.Constants.*;
 
 public class Lifter {
 
+    private final Robot robot;
+    double currentTime;
+
     public Lifter()
     {
+        robot = new Robot();
+        currentTime = robot.getCurrentTime();
+
         /** Pneumatics will be reported in dashboard later */
     }
     
-    private final Joystick driverJoystick = new Joystick(DRIVER_JOYSTICK_ID);
+    // private final Joystick driverJoystick = new Joystick(DRIVER_JOYSTICK_ID);
+
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {

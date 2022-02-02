@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Intake {
 
     private final Robot robot;
+    double currentTime;
 
     private final CANSparkMax rollerMotor;
     private final CANSparkMax topIntakeMotor;
@@ -27,6 +28,7 @@ public class Intake {
 
     public Intake() {
         robot = new Robot();
+        currentTime = robot.getCurrentTime();
 
         /** Motor speeds will be reported in dashboard later */
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);

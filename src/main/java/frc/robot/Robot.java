@@ -135,6 +135,11 @@ public class Robot extends TimedRobot {
         _limelight.autonomousInit();
     }
 
+    // Recieve a double of the current time from the autonomous Timer
+    public double getCurrentTime() {
+        return timer.get();
+    }
+
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
@@ -144,8 +149,9 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        // Field Relative Drive
         /*
+
+        // Field Oriented Drive
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
@@ -156,8 +162,9 @@ public class Robot extends TimedRobot {
         _drive.drive(runFieldOriented(driver.getRawAxis(1), driver.getRawAxis(0), driver.getRawAxis(2)));
         */
 
-        // Robot Oriented Drive
         /*
+
+        // Robot Oriented Drive
         _drive.drive(
                   new ChassisSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,

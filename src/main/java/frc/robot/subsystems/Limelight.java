@@ -11,9 +11,11 @@ import frc.robot.Robot;
 public class Limelight {
 
     private final Robot robot;
+    double currentTime;
     
     public Limelight() {
         robot = new Robot();
+        currentTime = robot.getCurrentTime();
     }
 
     PhotonCamera camera = new PhotonCamera("photonvision");
