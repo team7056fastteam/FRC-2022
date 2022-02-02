@@ -57,10 +57,7 @@ public class Drivetrain {
   );
   private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(_robot.getGyroscopeRotation()));
 
-  private ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-
   public Drivetrain() {
-
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     // There is 4 methods you can call to create your swerve modules.
@@ -146,14 +143,14 @@ public class Drivetrain {
   public Rotation2d getRotation() {
         return odometry.getPoseMeters().getRotation();
   }
-  
+
   public void drive(ChassisSpeeds chassisSpeeds) {
-        odometry.update(_robot.getGyroscopeRotation2d(),
-                new SwerveModuleState(frontLeftModule.getDriveVelocity(), new Rotation2d(frontLeftModule.getSteerAngle())),
-                new SwerveModuleState(frontRightModule.getDriveVelocity(), new Rotation2d(frontRightModule.getSteerAngle())),
-                new SwerveModuleState(backLeftModule.getDriveVelocity(), new Rotation2d(backLeftModule.getSteerAngle())),
-                new SwerveModuleState(backRightModule.getDriveVelocity(), new Rotation2d(backRightModule.getSteerAngle()))
-);
+    odometry.update(_robot.getGyroscopeRotation2d(),
+        new SwerveModuleState(frontLeftModule.getDriveVelocity(), new Rotation2d(frontLeftModule.getSteerAngle())),
+        new SwerveModuleState(frontRightModule.getDriveVelocity(), new Rotation2d(frontRightModule.getSteerAngle())),
+        new SwerveModuleState(backLeftModule.getDriveVelocity(), new Rotation2d(backLeftModule.getSteerAngle())),
+        new SwerveModuleState(backRightModule.getDriveVelocity(), new Rotation2d(backRightModule.getSteerAngle()))
+    );
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
 
     frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());

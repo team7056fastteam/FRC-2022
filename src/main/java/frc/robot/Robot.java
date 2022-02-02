@@ -144,12 +144,6 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        double throttle = (driver.getRawAxis(3) * -0.5) + .5;
-
-        double xPercent = throttle * -modifyAxis(driver.getRawAxis(1));
-        double yPercent = throttle * -modifyAxis(driver.getRawAxis(0));
-        double zPercent = throttle * -modifyAxis(driver.getRawAxis(2));
-        
         // Field Relative Drive
         /*
         _drive.drive(
@@ -158,12 +152,19 @@ public class Robot extends TimedRobot {
                           yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                           zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                           _drive.getRotation()));
+                          
+        _drive.drive(runFieldOriented(driver.getRawAxis(1), driver.getRawAxis(0), driver.getRawAxis(2)));
         */
+
+        // Robot Oriented Drive
+        /*
         _drive.drive(
                   new ChassisSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                           yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                           zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+        */
+        _drive.drive(runRobotOriented(driver.getRawAxis(1), driver.getRawAxis(0), driver.getRawAxis(2)));
 
         // Run intake
         _intake.teleopPeriodic();
@@ -187,8 +188,37 @@ public class Robot extends TimedRobot {
     /** This function sets the gyro heading */
     public void setGyroscopeHeading(double h) { _navpod.resetH(h); }
 
-    /** This function sets the relative position of the robot */
+    /** This function sets the relative position of the NavPod */
     public void setDefaultPosition(double x, double y) { _navpod.resetXY(x, y); }
+
+    // Field Oriented drive
+    public ChassisSpeeds runFieldOriented(double x, double y, double z) {
+        double xT = (driver.getRawAxis(3) * -0.5) + .5;
+        x = xT * -modifyAxis(x);
+        y = xT * -modifyAxis(y);
+        z = xT * -modifyAxis(z);
+
+        return ChassisSpeeds.fromFieldRelativeSpeeds(
+            x * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+            y * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+            z * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            _drive.getRotation()
+        );
+    }
+
+    // Robot Oriented drive
+    public ChassisSpeeds runRobotOriented(double x, double y, double z) {
+        double xT = (driver.getRawAxis(3) * -0.5) + .5;
+        x = xT * -modifyAxis(x);
+        y = xT * -modifyAxis(y);
+        z = xT * -modifyAxis(z);
+
+        return new ChassisSpeeds(
+            x * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+            y * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+            z * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+        );
+    }
 
     @Override
     public void disabledInit() {
