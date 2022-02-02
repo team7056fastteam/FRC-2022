@@ -13,11 +13,13 @@ import frc.robot.subsystems.*;
 
 public class Robot extends TimedRobot {
 
+    // Subsystems
     Drivetrain _drive;
     Intake _intake;
     Lifter _lifter;
     Shooter _shooter;
     Limelight _limelight;
+    Auton _auton;
 
     NavPod _navpod;
 
@@ -28,6 +30,7 @@ public class Robot extends TimedRobot {
     double gyroRotation;
     double navX;
     double navY;
+    double currentTime = 0;
 
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -41,6 +44,7 @@ public class Robot extends TimedRobot {
         _lifter = new Lifter();
         _shooter = new Shooter();
         _limelight = new Limelight();
+        _auton = new Auton();
 
         // NavPod initialization
         _navpod = new NavPod();
@@ -82,10 +86,11 @@ public class Robot extends TimedRobot {
         }
 
         _limelight.robotInit();
+        _auton.robotInit();
     }
 
     private static double deadband(double value, double deadband) {
-      if (Math.abs(value) > deadband) {
+        if (Math.abs(value) > deadband) {
             if (value > 0.0) {
                 return (value - deadband) / (1.0 - deadband);
             } else {
@@ -95,16 +100,16 @@ public class Robot extends TimedRobot {
             return 0.0;
         }
     }
-
+    
     private static double modifyAxis(double value) {
-      // Deadband
-      value = deadband(value, 0.3);
+        // Deadband
+        value = deadband(value, 0.3);
 
-      // Square the axis
-      value = Math.copySign(value * value, value);
+        // Square the axis
+        value = Math.copySign(value * value, value);
 
-      return value;
-  }
+        return value;
+    }
 
     /**
     * This function is called every robot packet, no matter the mode. Use this for items like
@@ -115,11 +120,13 @@ public class Robot extends TimedRobot {
         // Check if NavPod has been initialized
         if ((_navpod != null) && _navpod.isValid()) {
             NavPodUpdate update = _navpod.getUpdate();
-
+            
             gyroRotation = update.h;
             navX = update.x;
             navY = update.y;
         }
+        
+        _auton.robotPeriodic();
     }
 
     /** This function is run once each time the robot enters autonomous mode. */
@@ -131,19 +138,18 @@ public class Robot extends TimedRobot {
 
         /** Start autonomous clock */
         timer.start();
+        currentTime = timer.get();
 
         _limelight.autonomousInit();
+        _auton.autonomousInit();
     }
 
     // Recieve a double of the current time from the autonomous Timer
-    public double getCurrentTime() {
-        return timer.get();
-    }
+    public double getCurrentTime() { return currentTime; }
 
     /** This function is called periodically during autonomous. */
     @Override
-    public void autonomousPeriodic() {
-
+    public void autonomousPeriodic() { _auton.autonomousPeriodic();
     }
 
     /** This function is called periodically during operator control. */
@@ -230,5 +236,6 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         _drive.drive(new ChassisSpeeds(0, 0, 0));
+        currentTime = 0;
     }
 }
