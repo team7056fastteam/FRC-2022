@@ -109,8 +109,6 @@ public class Intake {
          * [Intake switch, Conveyor switch]
          * 0 - No cargo
          * 1 - Cargo
-         * 
-         * The current system relies on two 
         */
 
         if (invertConveyor) {
@@ -118,7 +116,7 @@ public class Intake {
         }
 
         else {
-            
+
             // Case [0, 0]
             if (!cargoInIntake && !cargoInConveyor) {
                 conveyorMotor.set(conveyorSpeed);

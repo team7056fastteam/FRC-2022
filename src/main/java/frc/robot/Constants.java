@@ -18,6 +18,13 @@ public final class Constants {
     public static final int DRIVER_JOYSTICK_ID = 0;
     public static final int OPERATOR_JOYSTICK_ID = 1;
 
+    /**
+     * 0-9 CAN : Encoders, PDP
+     * 10-19 CAN : Steer Motors
+     * 20-29 CAN : Drive Motors
+     * 30 - 39 CAN : Subsystem Motors
+     */
+
     /** Drive Constants */
     
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 20;

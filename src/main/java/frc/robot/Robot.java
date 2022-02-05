@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
 
         /** Start autonomous clock */
         timer.start();
-        currentTime = timer.get();
+        currentTime = 0;
 
         _limelight.autonomousInit();
         _auton.autonomousInit();
@@ -147,9 +147,10 @@ public class Robot extends TimedRobot {
     // Recieve a double of the current time from the autonomous Timer
     public double getCurrentTime() { return currentTime; }
 
-    /** This function is called periodically during autonomous. */
     @Override
-    public void autonomousPeriodic() { _auton.autonomousPeriodic();
+    public void autonomousPeriodic() {
+        _auton.autonomousPeriodic(); 
+        currentTime = timer.get();
     }
 
     /** This function is called periodically during operator control. */
@@ -233,9 +234,14 @@ public class Robot extends TimedRobot {
         );
     }
 
+    /** This function hard stops the drivetrain */
+    public void stop() {
+        _drive.drive(new ChassisSpeeds(0, 0, 0));
+    }
+
     @Override
     public void disabledInit() {
-        _drive.drive(new ChassisSpeeds(0, 0, 0));
+        stop();
         currentTime = 0;
     }
 }
