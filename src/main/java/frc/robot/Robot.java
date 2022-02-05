@@ -205,6 +205,11 @@ public class Robot extends TimedRobot {
     /** This function sets the relative position of the NavPod */
     public void setDefaultPosition(double x, double y) { _navpod.resetXY(x, y); }
 
+    /** These functions
+     *  recieves the current position of the NavPod */
+    public double getXPos() { return navX; }
+    public double getYPos() { return navY; }
+
     // Field Oriented drive
     public ChassisSpeeds runFieldOriented(double x, double y, double z) {
         double xT = (driver.getRawAxis(3) * -0.5) + .5;

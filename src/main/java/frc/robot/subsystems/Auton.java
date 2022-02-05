@@ -11,6 +11,12 @@ public class Auton {
     char autonMode;
     boolean hasStarted;
 
+    double navX = robot.getXPos();
+    double navY = robot.getYPos();
+    double[] position = {navX, navY};
+
+    double[] driveTo = {0.0, 0.0};
+
     private final Joystick driver = new Joystick(0);
 
     public Auton() {
