@@ -104,12 +104,16 @@ public class Auton {
 
     public double calculateSpeed(double distance) {
         // Do not change these values unless you know what you are doing!
-        double max = 0.7;
-        double rate = 0.008;
+        double max = 0.75;
+        double rate = 0.7;
         double fixedDistance = Math.abs(distance);
         int direction = 1;
 
-        double speed = Math.pow(2 * fixedDistance, 2) * rate;
+        // Make sure fixed distance doesn't go below zero
+        if (fixedDistance < 0) { fixedDistance = 0; }
+
+        // Calculate speed double
+        double speed = Math.log((fixedDistance + 1) * rate);
         if (speed > max) { speed = max - 0.01; }
         if (speed < 0) { speed = 0.0; }
         if (fixedDistance < 0.01) { speed = 0.0; }
@@ -124,7 +128,8 @@ public class Auton {
         double max = 0.8;
         double rate = 0.0005;
 
-        double speed = Math.pow(2 * angle, 2) * rate;
+        // Calculate speed double
+        double speed = Math.log((angle + 1) * rate);
         if (speed > max) { speed = max - 0.01; }
         if (speed < 0) { speed = 0.0; }
         if (angle < 0.01) { speed = 0.0; }
