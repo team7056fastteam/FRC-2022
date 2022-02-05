@@ -4,27 +4,37 @@
 
 package frc.robot.subsystems;
 
-import org.photonvision.PhotonCamera;
-
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Robot;
 
 public class Limelight {
 
     private final Robot robot;
     double currentTime;
+
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+
+    private final Joystick driver = new Joystick(0);
     
     public Limelight() {
         robot = new Robot();
         currentTime = robot.getCurrentTime();
     }
 
-    PhotonCamera camera = new PhotonCamera("photonvision");
-
     public void robotInit() {
-        camera.setDriverMode(true);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
     }
 
-    public void autonomousInit() {
-        camera.setDriverMode(false);
+    public void teleopPeriodic() {
+
+        if (driver.getRawButton(1)) {   
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+        }
+        else {
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+        }
+
     }
 }

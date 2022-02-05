@@ -15,16 +15,18 @@ public class Auton {
     boolean hasStarted;
     boolean hasReachedPosition = false;
     int phase = 0;
-
+/*
     double currentX = robot.getXPos();
     double currentY = robot.getYPos();
     double currentZ = robot.getGyroscopeRotation();
-
+*/
+    double currentX = 0;
+    double currentY = 0;
+    double currentZ = 0;
     private final Joystick driver = new Joystick(0);
 
     public Auton() {
         robot = new Robot();
-        _drive = new Drivetrain();
         currentTime = robot.getCurrentTime();
     }
 
@@ -99,7 +101,7 @@ public class Auton {
         ));
 
         // End function usage if we are moving to the next autonomous phase
-        if (xSpeed == 0 && ySpeed == 0 && rotation == 0) { phase++; }
+        if (xSpeed == 0 && ySpeed == 0 && rotation == 0) { phase++; robot.stop(); }
     }
 
     public double calculateSpeed(double distance) {
@@ -133,7 +135,6 @@ public class Auton {
         if (speed > max) { speed = max - 0.01; }
         if (speed < 0) { speed = 0.0; }
         if (angle < 0.01) { speed = 0.0; }
-
 
         return speed;
     }
