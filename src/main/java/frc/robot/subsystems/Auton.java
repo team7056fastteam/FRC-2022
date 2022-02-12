@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Robot;
@@ -15,11 +16,7 @@ public class Auton {
     boolean hasStarted;
     boolean hasReachedPosition = false;
     int phase = 0;
-/*
-    double currentX = robot.getXPos();
-    double currentY = robot.getYPos();
-    double currentZ = robot.getGyroscopeRotation();
-*/
+
     double currentX = 0;
     double currentY = 0;
     double currentZ = 0;
@@ -56,6 +53,10 @@ public class Auton {
         hasReachedPosition = false;
     }
 
+    private static double modifyAxis(double value) {
+        return Math.copySign(value * value, value);
+    }
+
     public void autonomousPeriodic() {
         if (autonMode == 'a') { autonA(); }
         if (autonMode == 'b') { autonB(); }
@@ -77,7 +78,25 @@ public class Auton {
         }
     }
 
-    public void autonB() { }
+    public void autonB() {
+        while (currentTime > 0 && currentTime < 2) {
+            _drive.drive(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                          (-modifyAxis(0.2)) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                          (-modifyAxis(0.0)) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                          (-modifyAxis(0.0)) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+                          Rotation2d.fromDegrees(0.0)));
+        }
+
+        while (currentTime > 2 && currentTime < 4) {
+            _drive.drive(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                          (-modifyAxis(0.0)) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                          (-modifyAxis(0.2)) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                          (-modifyAxis(0.0)) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+                          Rotation2d.fromDegrees(0.0)));
+        }
+    }
 
     public void autonC() { }
 
@@ -89,9 +108,9 @@ public class Auton {
 
     /** Drive functions */
     public void driveTo(double desiredX, double desiredY, double desiredZ) {
-        double xSpeed = calculateSpeed(desiredX - currentX);
-        double ySpeed = calculateSpeed(desiredY - currentY);
-        double rotation = calculateSpeed(desiredZ - currentZ);
+        double xSpeed = -modifyAxis(calculateSpeed(desiredX - currentX));
+        double ySpeed = -modifyAxis(calculateSpeed(desiredY - currentY));
+        double rotation = -modifyAxis(calculateSpeed(desiredZ - currentZ));
 
         _drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
             xSpeed * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
