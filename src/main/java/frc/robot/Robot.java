@@ -23,6 +23,7 @@ public class Robot extends TimedRobot {
     NavPod _navpod;
 
     private final Joystick driver = new Joystick(0);
+    private final Joystick driver2 = new Joystick(2);
     private final Timer timer = new Timer();
     
     // Static variables
@@ -163,8 +164,7 @@ public class Robot extends TimedRobot {
 
         double xPercent = xT * -modifyAxis(driver.getRawAxis(1));
         double yPercent = xT * -modifyAxis(driver.getRawAxis(0));
-        double zPercent = xT * 0.5 * -modifyAxis(driver.getRawAxis(2));
-        
+        double zPercent = xT * 0.5 * -modifyAxis(driver2.getRawAxis(1));
 
         // Field Oriented Drive
         _drive.drive(
@@ -175,9 +175,6 @@ public class Robot extends TimedRobot {
                           _drive.getRotation()));
                           
         //_drive.drive(runFieldOriented(driver.getRawAxis(1), driver.getRawAxis(0), driver.getRawAxis(2)));
-        
-
-        
 
         // Robot Oriented Drive
         /*
