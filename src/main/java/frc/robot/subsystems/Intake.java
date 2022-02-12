@@ -28,7 +28,6 @@ public class Intake {
 
     public Intake() {
         robot = new Robot();
-        currentTime = robot.getCurrentTime();
 
         /** Motor speeds will be reported in dashboard later */
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);

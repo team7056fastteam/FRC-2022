@@ -19,11 +19,9 @@ public class Robot extends TimedRobot {
     Lifter _lifter;
     Shooter _shooter;
     Limelight _limelight;
-    Auton _auton;
     NavPod _navpod;
 
     private final Joystick driver = new Joystick(0);
-    private final Joystick driver2 = new Joystick(2);
     private final Timer timer = new Timer();
     
     // Static variables
@@ -44,7 +42,6 @@ public class Robot extends TimedRobot {
         _lifter = new Lifter();
         _shooter = new Shooter();
         _limelight = new Limelight();
-        _auton = new Auton();
 
         // NavPod initialization
         _navpod = new NavPod();
@@ -86,7 +83,6 @@ public class Robot extends TimedRobot {
         }
 
         _limelight.robotInit();
-        _auton.robotInit();
     }
 
     private static double deadband(double value, double deadband) {
@@ -103,7 +99,7 @@ public class Robot extends TimedRobot {
     
     private static double modifyAxis(double value) {
         // Deadband
-        value = deadband(value, 0.3);
+        value = deadband(value, 0.1);
 
         // Square the axis
         value = Math.copySign(value * value, value);
@@ -125,8 +121,6 @@ public class Robot extends TimedRobot {
             navX = update.x;
             navY = update.y;
         }
-        
-        _auton.robotPeriodic();
     }
 
     /** This function is run once each time the robot enters autonomous mode. */
@@ -138,53 +132,75 @@ public class Robot extends TimedRobot {
 
         /** Start autonomous clock */
         timer.start();
-        currentTime = 0;
-
-        _auton.autonomousInit();
-    }
-
-    // Recieve a double of the current time from the autonomous Timer
-    public double getCurrentTime() { return currentTime; }
-
-    @Override
-    public void autonomousPeriodic() {
-        _auton.autonomousPeriodic(); 
         currentTime = timer.get();
     }
 
     @Override
+    public void autonomousPeriodic() {
+        currentTime = timer.get();
+
+        if (currentTime > 0 && currentTime < 4) {
+            _drive.drive(new ChassisSpeeds(autonModify(-0.6), autonModify(0.0), autonModify(0.0)));
+        }
+        else {
+            
+            _drive.drive(new ChassisSpeeds(0, 0, 0));
+            _drive.zeroGyroscope();
+        }
+
+    }
+
+    @Override
     public void teleopInit() {
+        setGyroscopeHeading(90);
         _drive.zeroGyroscope();
+    }
+
+    public double autonModify(double speed) {
+        return -modifyAxis(speed) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND;
     }
 
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        /*
         double xT = (driver.getRawAxis(3) * -0.5) + .5;
 
-        double xPercent = xT * -modifyAxis(driver.getRawAxis(1));
-        double yPercent = xT * -modifyAxis(driver.getRawAxis(0));
-        double zPercent = xT * -modifyAxis(driver2.getRawAxis(1) * 0.75);
-        
+        double yPercent = xT * -modifyAxis(driver.getRawAxis(4));
+        double xPercent = xT * -modifyAxis(driver.getRawAxis(5));
+        double zPercent = xT * -modifyAxis(driver.getRawAxis(0) * 0.75);
+        */
+        double xT = 1.0;
+        if (driver.getRawAxis(3) > 0.05) {
+            xT = 0.65;
+        }
+
+        double xPercent = -modifyAxis((driver.getRawAxis(5) * 0.8) * xT);
+        double yPercent = -modifyAxis((driver.getRawAxis(4) * 0.8) * xT);
+        double zPercent = -modifyAxis((driver.getRawAxis(0) * 0.7) * xT);
 
         // Field Oriented Drive
+        
+        /*
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                           yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                           zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                           _drive.getRotation()));
-                          
+        */
+
         //_drive.drive(runFieldOriented(driver.getRawAxis(1), driver.getRawAxis(0), driver.getRawAxis(2)));
 
         // Robot Oriented Drive
-        /*
+       
+        
         _drive.drive(
                   new ChassisSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                           yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                           zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-                          */
+        
         
         //_drive.drive(runRobotOriented(driver.getRawAxis(1), driver.getRawAxis(0), driver.getRawAxis(2) * 0.5));
 
@@ -259,6 +275,5 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         stop();
-        currentTime = 0;
     }
 }

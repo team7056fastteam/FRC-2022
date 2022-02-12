@@ -17,7 +17,6 @@ public class Lifter {
     public Lifter()
     {
         robot = new Robot();
-        currentTime = robot.getCurrentTime();
 
         /** Pneumatics will be reported in dashboard later */
     }

@@ -20,7 +20,6 @@ public class Limelight {
     
     public Limelight() {
         robot = new Robot();
-        currentTime = robot.getCurrentTime();
     }
 
     public void robotInit() {
