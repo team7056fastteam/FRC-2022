@@ -163,7 +163,7 @@ public class Robot extends TimedRobot {
 
         double xPercent = xT * -modifyAxis(driver.getRawAxis(1));
         double yPercent = xT * -modifyAxis(driver.getRawAxis(0));
-        double zPercent = xT * 0.5 * -modifyAxis(driver.getRawAxis(2));
+        double zPercent = xT * -modifyAxis(driver.getRawAxis(2) * 0.75);
         
 
         // Field Oriented Drive
