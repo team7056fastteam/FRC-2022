@@ -50,14 +50,14 @@ public class Robot extends TimedRobot {
         if (_navpod.isValid())
         {
             NavPodConfig config = new NavPodConfig();
-            config.cableMountAngle = 270;
-            config.fieldOrientedEnabled = true;
-            config.initialHeadingAngle = 0;
+            config.cableMountAngle = 0;
+            config.fieldOrientedEnabled = false;
+            config.initialHeadingAngle = 90;
             config.mountOffsetX = 0;
-            config.mountOffsetY = 4.25;
-            config.rotationScaleFactorX = 0.0675;
-            config.rotationScaleFactorY = 0.02;
-            config.translationScaleFactor = 0.008567;
+            config.mountOffsetY = 0;
+            config.rotationScaleFactorX = 0.05; // 0.0675
+            config.rotationScaleFactorY = 0.0; // 0.02
+            config.translationScaleFactor = 0.00748; // 0.008567
             _navpod.setConfig(config);
 
             // Report values to the console
@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
             setDefaultPosition(0, 0);
 
             // Update console with NavPod info every 10ms
-            _navpod.setAutoUpdate(0.5, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
+            _navpod.setAutoUpdate(0.025, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
             update.h, update.x, update.sx, update.y, update.sy));
         }
 
