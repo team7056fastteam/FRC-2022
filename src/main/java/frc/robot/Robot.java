@@ -181,28 +181,20 @@ public class Robot extends TimedRobot {
 
         // Field Oriented Drive
         
-        /*
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                           yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                           zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                           _drive.getRotation()));
-        */
-
-        //_drive.drive(runFieldOriented(driver.getRawAxis(1), driver.getRawAxis(0), driver.getRawAxis(2)));
 
         // Robot Oriented Drive
        
-        
         _drive.drive(
                   new ChassisSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                           yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                           zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-        
-        
-        //_drive.drive(runRobotOriented(driver.getRawAxis(1), driver.getRawAxis(0), driver.getRawAxis(2) * 0.5));
 
         // Run limelight
         _limelight.teleopPeriodic();
@@ -232,40 +224,9 @@ public class Robot extends TimedRobot {
     /** This function sets the relative position of the NavPod */
     public void setDefaultPosition(double x, double y) { _navpod.resetXY(x, y); }
 
-    /** These functions
-     *  recieves the current position of the NavPod */
+    /** These functions recieve the current position of the NavPod */
     public double getXPos() { return navX; }
     public double getYPos() { return navY; }
-
-    // Field Oriented drive
-    public ChassisSpeeds runFieldOriented(double x, double y, double z) {
-        double xT = (driver.getRawAxis(3) * -0.5) + .5;
-        x = xT * -modifyAxis(x);
-        y = xT * -modifyAxis(y);
-        z = xT * -modifyAxis(z);
-
-        return ChassisSpeeds.fromFieldRelativeSpeeds(
-            x * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-            y * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-            z * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-            _drive.getRotation()
-        );
-    }
-
-    // Robot Oriented drive
-    public ChassisSpeeds runRobotOriented(double x, double y, double z) {
-        double xT = (driver.getRawAxis(3) * -0.5) + .5;
-
-        x = xT * -modifyAxis(x);
-        y = xT * -modifyAxis(y);
-        z = xT * -modifyAxis(z);
-
-        return new ChassisSpeeds(
-            x * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-            y * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-            z * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-        );
-    }
 
     /** This function hard stops the drivetrain */
     public void stop() {

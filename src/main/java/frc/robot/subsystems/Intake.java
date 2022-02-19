@@ -16,7 +16,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Intake {
 
     private final Robot robot;
-    double currentTime;
 
     private final CANSparkMax rollerMotor;
     private final CANSparkMax topIntakeMotor;
@@ -47,7 +46,6 @@ public class Intake {
     private double conveyorSpeed = 0.25;
 
     private boolean invertConveyor;
-
     private boolean hasCounted = false;
     private int counter = 0;
 
