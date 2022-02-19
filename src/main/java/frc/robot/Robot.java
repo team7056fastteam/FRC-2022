@@ -128,7 +128,6 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         /** Reset the timer so the new autonomous session will start from zero */
         timer.reset();
-        setGyroscopeHeading(90);
 
         /** Start autonomous clock */
         timer.start();
@@ -140,11 +139,11 @@ public class Robot extends TimedRobot {
         currentTime = timer.get();
 
         if (currentTime > 0 && currentTime < 4) {
-            _drive.drive(new ChassisSpeeds(autonModify(-0.6), autonModify(0.0), autonModify(0.0)));
+            drive(0.4, 0.0, 0.0);
         }
         else {
             
-            _drive.drive(new ChassisSpeeds(0, 0, 0));
+            drive(0.0, 0.0, 0.0);
             _drive.zeroGyroscope();
         }
 
@@ -152,12 +151,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        setGyroscopeHeading(90);
         _drive.zeroGyroscope();
-    }
-
-    public double autonModify(double speed) {
-        return -modifyAxis(speed) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND;
     }
 
     /** This function is called periodically during operator control. */
@@ -180,16 +174,16 @@ public class Robot extends TimedRobot {
         double zPercent = -modifyAxis((driver.getRawAxis(0) * 0.7) * xT);
 
         // Field Oriented Drive
-        
+        /*
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                           yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                           zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                           _drive.getRotation()));
+        */
 
         // Robot Oriented Drive
-       
         _drive.drive(
                   new ChassisSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
@@ -231,6 +225,14 @@ public class Robot extends TimedRobot {
     /** This function hard stops the drivetrain */
     public void stop() {
         _drive.drive(new ChassisSpeeds(0, 0, 0));
+    }
+
+    public void drive(double translationX, double translationY, double rotation) {
+        _drive.drive(
+            new ChassisSpeeds(
+                -modifyAxis(translationX) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                -modifyAxis(translationX) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                -modifyAxis(translationX) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
     }
 
     @Override
