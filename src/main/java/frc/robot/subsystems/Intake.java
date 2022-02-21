@@ -38,7 +38,7 @@ public class Intake {
         conveyorSwitch = new DigitalInput(CONVEYOR_LIMIT_SWITCH);
     }
 
-    private final XboxController operatorController = new XboxController(OPERATOR_JOYSTICK_ID);
+    private final XboxController operator = new XboxController(OPERATOR_JOYSTICK_ID);
      
     /** Motor speed variables */
     private double rollerSpeed = 0.5;
@@ -53,7 +53,7 @@ public class Intake {
     public void teleopPeriodic() {
 
         // Check input from left trigger
-        if (operatorController.getLeftTriggerAxis() > 0.2) {
+        if (operator.getLeftTriggerAxis() > 0.2) {
             runRoller();
             runIntake();
             runConv();
@@ -63,7 +63,12 @@ public class Intake {
         }
 
         // Check input for A button
-        if (operatorController.getBButton()) { 
+        if (operator.getAButton()) {
+            forceRunConv();
+        }
+
+        // Check input for B button
+        if (operator.getBButton()) { 
             invertConveyor = true;
         }
         else {
@@ -96,6 +101,10 @@ public class Intake {
     public void runIntake() {
         topIntakeMotor.set(intakeSpeed);
         bottomIntakeMotor.set(robot.invert(intakeSpeed));
+    }
+
+    public void forceRunConv() {
+        conveyorMotor.set(conveyorSpeed);
     }
 
     public void runConv() {

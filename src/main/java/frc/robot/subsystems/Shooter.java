@@ -34,7 +34,7 @@ public class Shooter {
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
     
-    private final XboxController operatorController = new XboxController(OPERATOR_JOYSTICK_ID);
+    private final XboxController operator = new XboxController(OPERATOR_JOYSTICK_ID);
 
     /** Motor speed variables */
     private double shooterSpeed = 0.85;
@@ -43,7 +43,7 @@ public class Shooter {
     public void teleopPeriodic() {
         
         // Check input from right trigger
-        if (operatorController.getRightTriggerAxis() > 0.2) {
+        if (operator.getRightTriggerAxis() > 0.2) {
             runShooter();
         }
     }
