@@ -27,7 +27,7 @@ public class Lifter {
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
     }
     
-    private final Joystick operatorController = new Joystick(OPERATOR_JOYSTICK_ID);
+    private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
 
     /** Motor speed variables */
     private double liftModifier = 0.5;
@@ -35,10 +35,10 @@ public class Lifter {
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
         // Check input from Y axis
-        if (operatorController.getY() > 0.1) {
+        if (operator.getY() > 0.1) {
 
-            leftLiftMotor.set(liftModifier * operatorController.getY());
-            rightLiftMotor.set(robot.invert(liftModifier) * operatorController.getY());
+            leftLiftMotor.set(liftModifier * operator.getY());
+            rightLiftMotor.set(robot.invert(liftModifier) * operator.getY());
         }
     }
 }

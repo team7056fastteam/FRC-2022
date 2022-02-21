@@ -196,6 +196,8 @@ public class Robot extends TimedRobot {
         if (t > 0 && t < 2) {
             // Drive towards hub
             drive(0, .3, 0);
+            _shooter.stop();
+            _intake.stop();
         }
         else if (t > 2 && t < 4) {
             // Stop at hub
@@ -210,6 +212,18 @@ public class Robot extends TimedRobot {
             drive(0, -.4, 0);
             _shooter.stop();
             _intake.stop();
+        }
+        else if (t > 7 && t < 9) {
+            // Pick up cargo
+            stop();
+            _intake.forceRunConv();
+            _intake.runRoller();
+        }
+        else if (t > 9 && t < 12) {
+            // Drive towards terminal
+            drive(0, -.4, 0);
+            _intake.stop();
+            _shooter.stop();
         }
     }
 
