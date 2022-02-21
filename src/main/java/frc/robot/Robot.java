@@ -22,13 +22,13 @@ public class Robot extends TimedRobot {
     NavPod _navpod;
 
     private final Joystick driver = new Joystick(0);
+    private final Joystick operator = new Joystick(0);
     private final Timer timer = new Timer();
     
     // Static variables
+    char auton;
     double gyroRotation;
-    double navX;
-    double navY;
-    double currentTime = 0;
+    double t;
 
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -42,9 +42,12 @@ public class Robot extends TimedRobot {
         _lifter = new Lifter();
         _shooter = new Shooter();
         _limelight = new Limelight();
-
-        // NavPod initialization
         _navpod = new NavPod();
+
+        // Reset instance variables
+        auton = 'a';
+        gyroRotation = 0.0;
+        t = 0.0;
 
         // Check if the NavPod is connected to RoboRIO
         if (_navpod.isValid())
@@ -77,11 +80,12 @@ public class Robot extends TimedRobot {
             setGyroscopeHeading(90);
             setDefaultPosition(0, 0);
 
-            // Update console with NavPod info every 10ms
+            // Update console with NavPod info every 25ms
             _navpod.setAutoUpdate(0.025, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
             update.h, update.x, update.sx, update.y, update.sy));
         }
 
+        // Initialize subsystems that need to be updated before autonomous/operator control
         _limelight.robotInit();
     }
 
@@ -113,13 +117,28 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void robotPeriodic() {
-        // Check if NavPod has been initialized
+        // Check if NavPod has been initialized, run updates
         if ((_navpod != null) && _navpod.isValid()) {
             NavPodUpdate update = _navpod.getUpdate();
-            
             gyroRotation = update.h;
-            navX = update.x;
-            navY = update.y;
+        }
+
+        // Allow autonomous selection
+        if (operator.getRawButton(1)) {
+            auton = 'a';
+            System.out.println("Auton A selected...");
+        }
+        else if (operator.getRawButton(2)) {
+            auton = 'b';
+            System.out.println("Auton B selected...");
+        }
+        else if (operator.getRawButton(4)) {
+            auton = 'c';
+            System.out.println("Auton C selected...");
+        }
+        else if (operator.getRawButton(3)) {
+            auton = 'd';
+            System.out.println("Auton D selected...");
         }
     }
 
@@ -128,36 +147,90 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         /** Reset the timer so the new autonomous session will start from zero */
         timer.reset();
-
-        /** Start autonomous clock */
         timer.start();
-        currentTime = timer.get();
+        t = 0.0;
     }
 
+    /** This function is called periodically during autonomous mode. */
     @Override
     public void autonomousPeriodic() {
-        currentTime = timer.get();
+        t = timer.get();
 
-        if (currentTime > 0 && currentTime < 4) {
-            drive(0.4, 0.0, 0.0);
+        if (auton == 'a') {
+            autonA();
+        }
+        else if (auton == 'b') {
+            autonB();
+        }
+        else if (auton == 'c') {
+            autonC();
+        }
+        else if (auton == 'd') {
+            // TODO fill in other necessary autonomous functions
         }
         else {
-            
-            drive(0.0, 0.0, 0.0);
-            _drive.zeroGyroscope();
+            // Default to auton mode A if necessary
+            auton = 'a';
         }
+    }
+
+    /**
+    * Autonomous functions are labeled in order of importance
+    * and usage on the field.
+    * 
+    * Collector Positions - Functions to collect cargo and deliver it at a fast rate
+    * Defensive Positions - Functions to prioritize moving enemy cargo before collecting
+    */
+
+    /*  Collector Position 1
+        1. Deposit cargo into hub
+        2. Drive towards cargo in center area
+        3. Collect cargo in center area
+        4. Drive towards terminal
+        5. Push cargo into terminal for human player
+        6. Return to hub
+        7. Deposit cargo into hub
+    */
+    public void autonA() {
 
     }
 
+    /*  Collector Position 2
+        1. Deposit cargo into hub
+        2. Drive towards cargo in lower area
+        3. Collect cargo in lower area
+        4. Return to hub position
+        5. Deposit cargo into hub
+        6. Drive to center line
+    */
+    public void autonB() {
+
+    }
+
+    /*  Defensive Position 1
+        1. Deposit cargo into hub
+        2. Drive towards enemy cargo in lower area
+        3. Collect enemy cargo in lower area
+        4. Drive towards hangar
+        5. Deposit enemy cargo at hangar
+        6. Drive to center line
+    */
+    public void autonC() {
+
+    }
+
+    /** This function is run once each time the robot enters operator control. */
     @Override
     public void teleopInit() {
-        _drive.zeroGyroscope();
+
     }
 
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
         /*
+        Code for joystick control (field oriented)
+
         double xT = (driver.getRawAxis(3) * -0.5) + .5;
 
         double yPercent = xT * -modifyAxis(driver.getRawAxis(4));
@@ -190,16 +263,10 @@ public class Robot extends TimedRobot {
                           yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                           zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
-        // Run limelight
+        // Constructor for other subsystems
         _limelight.teleopPeriodic();
-
-        // Run intake
         _intake.teleopPeriodic();
-
-        // Run lifter
         _lifter.teleopPeriodic();
-
-        // Run shooter
         _shooter.teleopPeriodic();
     }
 
@@ -218,15 +285,12 @@ public class Robot extends TimedRobot {
     /** This function sets the relative position of the NavPod */
     public void setDefaultPosition(double x, double y) { _navpod.resetXY(x, y); }
 
-    /** These functions recieve the current position of the NavPod */
-    public double getXPos() { return navX; }
-    public double getYPos() { return navY; }
-
-    /** This function hard stops the drivetrain */
+    /** This function stops the drivetrain */
     public void stop() {
         _drive.drive(new ChassisSpeeds(0, 0, 0));
     }
 
+    /** This function allows an easy drive function to exist for autonomous */
     public void drive(double translationX, double translationY, double rotation) {
         _drive.drive(
             new ChassisSpeeds(
