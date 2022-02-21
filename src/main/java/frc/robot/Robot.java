@@ -38,11 +38,11 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Initialize robot subsystems
         _drive = new Drivetrain();
+        _navpod = new NavPod();
         _intake = new Intake();
         _lifter = new Lifter();
         _shooter = new Shooter();
         _limelight = new Limelight();
-        _navpod = new NavPod();
 
         // Reset instance variables
         auton = 'a';
@@ -102,6 +102,7 @@ public class Robot extends TimedRobot {
     }
     
     private static double modifyAxis(double value) {
+        /*
         // Deadband
         value = deadband(value, 0.1);
 
@@ -109,6 +110,8 @@ public class Robot extends TimedRobot {
         value = Math.copySign(value * value, value);
 
         return value;
+        */
+        return deadband(Math.copySign(value * value, value), 0.1);
     }
 
     /**
@@ -241,6 +244,7 @@ public class Robot extends TimedRobot {
             _intake.forceRunConv();
         }
         else {
+            // Stop everything, end of auton
             stop();
             _shooter.stop();
             _intake.stop();
@@ -310,10 +314,11 @@ public class Robot extends TimedRobot {
 
         // Robot Oriented Drive
         _drive.drive(
-                  new ChassisSpeeds(
-                          xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                          yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                          zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+            new ChassisSpeeds(
+                xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+        ));
 
         // Constructor for other subsystems
         _limelight.teleopPeriodic();
@@ -348,7 +353,8 @@ public class Robot extends TimedRobot {
             new ChassisSpeeds(
                 -modifyAxis(translationX) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                 -modifyAxis(translationX) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(translationX) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+                -modifyAxis(translationX) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+        ));
     }
 
     @Override
