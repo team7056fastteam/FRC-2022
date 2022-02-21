@@ -18,8 +18,6 @@ public class Intake {
     private final Robot robot;
 
     private final CANSparkMax rollerMotor;
-    private final CANSparkMax topIntakeMotor;
-    private final CANSparkMax bottomIntakeMotor;
     private final CANSparkMax conveyorMotor;
 
     private final DigitalInput intakeSwitch;
@@ -29,8 +27,6 @@ public class Intake {
         robot = new Robot();
 
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);
-        topIntakeMotor = new CANSparkMax(INTAKE_TOP_MOTOR, MotorType.kBrushless);
-        bottomIntakeMotor = new CANSparkMax(INTAKE_BOTTOM_MOTOR, MotorType.kBrushless);
         conveyorMotor = new CANSparkMax(INTAKE_CONVEYOR_MOTOR, MotorType.kBrushless);
 
         intakeSwitch = new DigitalInput(INTAKE_LIMIT_SWITCH);
@@ -41,7 +37,6 @@ public class Intake {
      
     /** Motor speed variables */
     private double rollerSpeed = 0.5;
-    private double intakeSpeed = 0.5;
     private double conveyorSpeed = 0.25;
 
     private boolean invertConveyor;
@@ -54,7 +49,6 @@ public class Intake {
         // Check input from left trigger
         if (operator.getLeftTriggerAxis() > 0.2) {
             runRoller();
-            runIntake();
             runConv();
         }
         else {
@@ -95,11 +89,6 @@ public class Intake {
 
     public void runRoller() {
         rollerMotor.set(rollerSpeed);
-    }
-
-    public void runIntake() {
-        topIntakeMotor.set(intakeSpeed);
-        bottomIntakeMotor.set(robot.invert(intakeSpeed));
     }
 
     public void forceRunConv() {
@@ -156,9 +145,7 @@ public class Intake {
     }
 
     public void stop() {
-        conveyorMotor.set(0.0);
-        rollerMotor.set(0.0);
-        topIntakeMotor.set(0.0);
-        bottomIntakeMotor.set(0.0);
+        conveyorMotor.set(0);
+        rollerMotor.set(0);
     }
 }

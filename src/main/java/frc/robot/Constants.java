@@ -24,13 +24,13 @@ public final class Constants {
         40-49 CAN : Lifter Motors
     */
 
-    /** Drive Constants */
-
     /*
         How to configure steer offsets:
         Increase - Counter Clockwise
         Decrease - Clockwise
     */
+
+    /** Drive Constants */
     
     // Front Left Module
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 20;
@@ -56,17 +56,15 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 5;
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
 
-    /** Intake Constants */
+    /** Intake/Shooter Constants */
 
+    // Intake Module
     public static final int INTAKE_ROLLER_MOTOR = 30;
     public static final int INTAKE_CONVEYOR_MOTOR = 31;
-    public static final int INTAKE_TOP_MOTOR = 32;
-    public static final int INTAKE_BOTTOM_MOTOR = 33;
 
-    /** Shooter Constants */
-
-    public static final int SHOOTER_LEFT_MOTOR = 34;
-    public static final int SHOOTER_RIGHT_MOTOR = 35;
+    // Shooter Module
+    public static final int SHOOTER_LEFT_MOTOR = 32;
+    public static final int SHOOTER_RIGHT_MOTOR = 33;
 
     /** Lift Constants */
 
@@ -75,7 +73,10 @@ public final class Constants {
 
     /** Digital Input Constants */
     
+    // Limit Switches
     public static final int INTAKE_LIMIT_SWITCH = 0;
     public static final int CONVEYOR_LIMIT_SWITCH = 1;
+
+    // LED Control
     public static final int LED_CHANNEL = 2;
 }
