@@ -195,7 +195,7 @@ public class Robot extends TimedRobot {
     public void autonA() {
         if (t > 0 && t < 2) {
             // Drive towards hub
-            drive(0, .3, 0);
+            drive(0, .4, 0);
             _shooter.stop();
             _intake.stop();
         }
@@ -209,21 +209,41 @@ public class Robot extends TimedRobot {
         else if (t > 4 && t < 7) {
             // Leave hub
             // Drive towards cargo
-            drive(0, -.4, 0);
+            drive(0, -.5, 0);
             _shooter.stop();
             _intake.stop();
         }
         else if (t > 7 && t < 9) {
-            // Pick up cargo
+            // Use intake & conv to pick up cargo
             stop();
             _intake.forceRunConv();
             _intake.runRoller();
         }
         else if (t > 9 && t < 12) {
             // Drive towards terminal
-            drive(0, -.4, 0);
+            drive(0, -.5, 0);
             _intake.stop();
             _shooter.stop();
+        }
+        else if (t > 12 && t < 13) {
+            // Stop at terminal
+            stop();
+        }
+        else if (t > 13 && t < 17) {
+            // Drive to hub
+            drive(0, .5, 0);
+        }
+        else if (t > 17 && t < 19) {
+            // Stop at hub
+            // Use shooter & conv
+            stop();
+            _shooter.runShooter();
+            _intake.forceRunConv();
+        }
+        else {
+            stop();
+            _shooter.stop();
+            _intake.stop();
         }
     }
 
