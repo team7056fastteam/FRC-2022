@@ -29,7 +29,7 @@ public class Drivetrain {
   Robot _robot = new Robot();
 
   private static final double MAX_VOLTAGE = 12.0;
-  public static final double MAX_VELOCITY_METERS_PER_SECOND = 7;
+  public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.14528;
   public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
         Math.hypot(Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
