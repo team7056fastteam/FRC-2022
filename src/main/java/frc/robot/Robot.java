@@ -241,6 +241,7 @@ public class Robot extends TimedRobot {
             _intake.forceRunConv();
         }
         else {
+            // Stop everything, end of auton
             stop();
             _shooter.stop();
             _intake.stop();
