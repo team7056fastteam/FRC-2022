@@ -28,7 +28,6 @@ public class Intake {
     public Intake() {
         robot = new Robot();
 
-        /** Motor speeds will be reported in dashboard later */
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);
         topIntakeMotor = new CANSparkMax(INTAKE_TOP_MOTOR, MotorType.kBrushless);
         bottomIntakeMotor = new CANSparkMax(INTAKE_BOTTOM_MOTOR, MotorType.kBrushless);
@@ -154,5 +153,12 @@ public class Intake {
 
     public void runConvInverted() {
         conveyorMotor.set(robot.invert(conveyorSpeed));
+    }
+
+    public void stop() {
+        conveyorMotor.set(0.0);
+        rollerMotor.set(0.0);
+        topIntakeMotor.set(0.0);
+        bottomIntakeMotor.set(0.0);
     }
 }

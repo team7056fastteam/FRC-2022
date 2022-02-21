@@ -23,8 +23,6 @@ public class Lifter {
     public Lifter()
     {
         robot = new Robot();
-        
-        /** Motor speeds will be reported in dashboard later */
         leftLiftMotor = new CANSparkMax(LIFT_LEFT_MOTOR, MotorType.kBrushless);
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
     }

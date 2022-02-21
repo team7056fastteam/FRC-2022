@@ -148,7 +148,9 @@ public class Robot extends TimedRobot {
         /** Reset the timer so the new autonomous session will start from zero */
         timer.reset();
         timer.start();
-        t = 0.0;
+        t = 0;
+
+        System.out.println("Running Autonomous Function : " + String.valueOf(auton).toUpperCase());
     }
 
     /** This function is called periodically during autonomous mode. */
@@ -166,7 +168,6 @@ public class Robot extends TimedRobot {
             autonC();
         }
         else if (auton == 'd') {
-            // TODO fill in other necessary autonomous functions
         }
         else {
             // Default to auton mode A if necessary
@@ -192,7 +193,24 @@ public class Robot extends TimedRobot {
         7. Deposit cargo into hub
     */
     public void autonA() {
-
+        if (t > 0 && t < 2) {
+            // Drive towards hub
+            drive(0, .3, 0);
+        }
+        else if (t > 2 && t < 4) {
+            // Stop at hub
+            // Use shooter & conv
+            stop();
+            _shooter.runShooter();
+            _intake.forceRunConv();
+        }
+        else if (t > 4 && t < 7) {
+            // Leave hub
+            // Drive towards cargo
+            drive(0, -.4, 0);
+            _shooter.stop();
+            _intake.stop();
+        }
     }
 
     /*  Collector Position 2

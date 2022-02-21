@@ -28,8 +28,6 @@ public class Shooter {
     public Shooter()
     {
         robot = new Robot();
-
-        /** Motor speeds will be reported in dashboard later */
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
@@ -51,5 +49,10 @@ public class Shooter {
     public void runShooter() {
         leftShooterMotor.set(shooterSpeed);
         rightShooterMotor.set(robot.invert(shooterSpeed));
+    }
+
+    public void stop() {
+        leftShooterMotor.set(0);
+        rightShooterMotor.set(0);
     }
 }
