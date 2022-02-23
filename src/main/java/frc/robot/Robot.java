@@ -186,7 +186,8 @@ public class Robot extends TimedRobot {
     * Defensive Positions - Functions to prioritize moving enemy cargo before collecting
     */
 
-    /*  Collector Position 1
+    /*  
+        Collector Position 1
         1. Deposit cargo into hub
         2. Drive towards cargo in center area
         3. Collect cargo in center area
@@ -251,7 +252,8 @@ public class Robot extends TimedRobot {
         }
     }
 
-    /*  Collector Position 2
+    /*  
+        Collector Position 2
         1. Deposit cargo into hub
         2. Drive towards cargo in lower area
         3. Collect cargo in lower area
@@ -260,10 +262,30 @@ public class Robot extends TimedRobot {
         6. Drive to center line
     */
     public void autonB() {
-
+        if (t > 0 && t < 2) {
+            // Drive towards hub
+            drive(0, .4, 0);
+            _shooter.stop();
+            _intake.stop();
+        }
+        else if (t > 2 && t < 4) {
+            // Stop at hub
+            // Use shooter & conv
+            stop();
+            _shooter.runShooter();
+            _intake.forceRunConv();
+        }
+        else if (t > 4 && t < 7) {
+            // Leave hub
+            // Drive towards cargo
+            drive(0, -.5, 0);
+            _shooter.stop();
+            _intake.stop();
+        }
     }
 
-    /*  Defensive Position 1
+    /*  
+        Defensive Position 1
         1. Deposit cargo into hub
         2. Drive towards enemy cargo in lower area
         3. Collect enemy cargo in lower area
@@ -361,4 +383,6 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         stop();
     }
+
+    // execute order 66
 }
