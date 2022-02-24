@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
     NavPod _navpod;
 
     private final Joystick driver = new Joystick(0);
-    private final Joystick operator = new Joystick(0);
+    private final Joystick operator = new Joystick(1);
     private final Timer timer = new Timer();
     
     // Static variables
@@ -323,7 +323,7 @@ public class Robot extends TimedRobot {
         double xPercent = -modifyAxis((driver.getRawAxis(5) * 0.8) * xT);
         double yPercent = -modifyAxis((driver.getRawAxis(4) * 0.8) * xT);
         double zPercent = -modifyAxis((driver.getRawAxis(0) * 0.7) * xT);
-
+        
         // Field Oriented Drive
         /*
         _drive.drive(

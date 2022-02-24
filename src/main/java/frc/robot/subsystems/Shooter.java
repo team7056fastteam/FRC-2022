@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Robot;
 
 import static frc.robot.Constants.*;
@@ -32,16 +32,16 @@ public class Shooter {
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
     
-    private final XboxController operator = new XboxController(OPERATOR_JOYSTICK_ID);
+    private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
 
-    /** Motor speed variables */
+    /** Configuration */
     private double shooterSpeed = 0.85;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
         
         // Check input from right trigger
-        if (operator.getRightTriggerAxis() > 0.2) {
+        if (operator.getRawAxis(3) > 0.2) {
             runShooter();
         }
     }

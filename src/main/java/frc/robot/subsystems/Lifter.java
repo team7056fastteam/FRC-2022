@@ -29,16 +29,18 @@ public class Lifter {
     
     private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
 
-    /** Motor speed variables */
+    /**  Configuration */
     private double liftModifier = 0.5;
+    double input = operator.getRawAxis(1) * liftModifier;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
+        
         // Check input from Y axis
-        if (operator.getY() > 0.1) {
+        if (operator.getRawAxis(1) > 0.1) {
 
-            leftLiftMotor.set(liftModifier * operator.getY());
-            rightLiftMotor.set(robot.invert(liftModifier) * operator.getY());
+            leftLiftMotor.set(input);
+            rightLiftMotor.set(robot.invert(input));
         }
     }
 }
