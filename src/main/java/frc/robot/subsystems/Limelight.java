@@ -28,6 +28,5 @@ public class Limelight {
         else {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
         }
-
     }
 }

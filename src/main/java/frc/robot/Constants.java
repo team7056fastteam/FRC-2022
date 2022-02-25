@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+
 public final class Constants {
     /** Chassis Constants */
 
@@ -79,4 +81,57 @@ public final class Constants {
 
     // LED Control
     public static final int LED_CHANNEL = 2;
+
+    /*
+        Xbox Controller Inputs, in case needed:
+
+        joystick.getRawAxis(0) - Left X Axis        joystick.getRawButton(1) - A
+        joystick.getRawAxis(1) - Left Y Axis        joystick.getRawButton(2) - B
+        joystick.getRawAxis(2) - Left Trigger       joystick.getRawButton(3) - X
+        joystick.getRawAxis(3) - Right Trigger      joystick.getRawButton(4) - Y
+        joystick.getRawAxis(4) - Right X Axis       joystick.getRawButton(5) - Left Bumper
+        joystick.getRawAxis(5) - Right Y Axis       joystick.getRawButton(6) - Right Bumper
+                                                    joystick.getRawButton(7) - Back
+                                                    joystick.getRawButton(8) - Home
+                                                    joystick.getRawButton(9) - Left Stick
+                                                    joystick.getRawButton(10) - Right Stick
+    */
+
+    private static final Joystick driver = new Joystick(0);
+    private static final Joystick operator = new Joystick(1);
+
+    /** Functions to recieve joystick input from Constants class */
+    public double driverLX() { return driver.getRawAxis(0); }
+    public double driverLY() { return driver.getRawAxis(1); }
+    public double driverLT() { return driver.getRawAxis(2); }
+    public double driverRY() { return driver.getRawAxis(3); }
+    public double driverRX() { return driver.getRawAxis(4); }
+    public double driverRT() { return driver.getRawAxis(5); }
+    public boolean driverA() { return driver.getRawButton(1); }
+    public boolean driverB() { return driver.getRawButton(2); }
+    public boolean driverX() { return driver.getRawButton(3); }
+    public boolean driverY() { return driver.getRawButton(4); }
+    public boolean driverLB() { return driver.getRawButton(5); }
+    public boolean driverRB() { return driver.getRawButton(6); }
+    public boolean driverBack() { return driver.getRawButton(7); }
+    public boolean driverHome() { return driver.getRawButton(8); }
+    public boolean driverLS() { return driver.getRawButton(9); }
+    public boolean driverRS() { return driver.getRawButton(10); }
+    
+    public double operatorLX() { return operator.getRawAxis(0); }
+    public double operatorLY() { return operator.getRawAxis(1); }
+    public double operatorLT() { return operator.getRawAxis(2); }
+    public double operatorRY() { return operator.getRawAxis(3); }
+    public double operatorRX() { return operator.getRawAxis(4); }
+    public double operatorRT() { return operator.getRawAxis(5); }
+    public boolean operatorA() { return operator.getRawButton(1); }
+    public boolean operatorB() { return operator.getRawButton(2); }
+    public boolean operatorX() { return operator.getRawButton(3); }
+    public boolean operatorY() { return operator.getRawButton(4); }
+    public boolean operatorLB() { return operator.getRawButton(5); }
+    public boolean operatorRB() { return operator.getRawButton(6); }
+    public boolean operatorBack() { return operator.getRawButton(7); }
+    public boolean operatorHome() { return operator.getRawButton(8); }
+    public boolean operatorLS() { return operator.getRawButton(9); }
+    public boolean operatorRS() { return operator.getRawButton(10); }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.Constants;
+
 import edu.wpi.first.wpilibj.Joystick;  
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,9 +22,10 @@ public class Robot extends TimedRobot {
     Shooter _shooter;
     Limelight _limelight;
     NavPod _navpod;
+    Constants constants = new Constants();
 
-    private final Joystick driver = new Joystick(0);
-    private final Joystick operator = new Joystick(0);
+    // private final Joystick driver = new Joystick(0);
+    // private final Joystick operator = new Joystick(1);
     private final Timer timer = new Timer();
     
     // Static variables
@@ -127,19 +130,19 @@ public class Robot extends TimedRobot {
         }
 
         // Allow autonomous selection
-        if (operator.getRawButton(1)) {
+        if (constants.operatorA()) {
             auton = 'a';
             System.out.println("Auton A selected...");
         }
-        else if (operator.getRawButton(2)) {
+        else if (constants.operatorB()) {
             auton = 'b';
             System.out.println("Auton B selected...");
         }
-        else if (operator.getRawButton(4)) {
+        else if (constants.operatorX()) {
             auton = 'c';
             System.out.println("Auton C selected...");
         }
-        else if (operator.getRawButton(3)) {
+        else if (constants.operatorY()) {
             auton = 'd';
             System.out.println("Auton D selected...");
         }
@@ -186,7 +189,8 @@ public class Robot extends TimedRobot {
     * Defensive Positions - Functions to prioritize moving enemy cargo before collecting
     */
 
-    /*  Collector Position 1
+    /*  
+        Collector Position 1
         1. Deposit cargo into hub
         2. Drive towards cargo in center area
         3. Collect cargo in center area
@@ -251,7 +255,8 @@ public class Robot extends TimedRobot {
         }
     }
 
-    /*  Collector Position 2
+    /*  
+        Collector Position 2
         1. Deposit cargo into hub
         2. Drive towards cargo in lower area
         3. Collect cargo in lower area
@@ -260,10 +265,30 @@ public class Robot extends TimedRobot {
         6. Drive to center line
     */
     public void autonB() {
-
+        if (t > 0 && t < 2) {
+            // Drive towards hub
+            drive(0, .4, 0);
+            _shooter.stop();
+            _intake.stop();
+        }
+        else if (t > 2 && t < 4) {
+            // Stop at hub
+            // Use shooter & conv
+            stop();
+            _shooter.runShooter();
+            _intake.forceRunConv();
+        }
+        else if (t > 4 && t < 7) {
+            // Leave hub
+            // Drive towards cargo
+            drive(0, -.5, 0);
+            _shooter.stop();
+            _intake.stop();
+        }
     }
 
-    /*  Defensive Position 1
+    /*  
+        Defensive Position 1
         1. Deposit cargo into hub
         2. Drive towards enemy cargo in lower area
         3. Collect enemy cargo in lower area
@@ -294,14 +319,14 @@ public class Robot extends TimedRobot {
         double zPercent = xT * -modifyAxis(driver.getRawAxis(0) * 0.75);
         */
         double xT = 1.0;
-        if (driver.getRawAxis(3) > 0.05) {
+        if (constants.driverRT() > 0.05) {
             xT = 0.65;
         }
 
-        double xPercent = -modifyAxis((driver.getRawAxis(5) * 0.8) * xT);
-        double yPercent = -modifyAxis((driver.getRawAxis(4) * 0.8) * xT);
-        double zPercent = -modifyAxis((driver.getRawAxis(0) * 0.7) * xT);
-
+        double xPercent = -modifyAxis((constants.driverRY() * 0.8) * xT);
+        double yPercent = -modifyAxis((constants.driverRX() * 0.8) * xT);
+        double zPercent = -modifyAxis((constants.driverLX() * 0.7) * xT);
+        
         // Field Oriented Drive
         /*
         _drive.drive(
