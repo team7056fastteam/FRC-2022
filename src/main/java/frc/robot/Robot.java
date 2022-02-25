@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants;
-
-import edu.wpi.first.wpilibj.Joystick;  
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.geometry.Rotation2d;
