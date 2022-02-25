@@ -4,7 +4,8 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Joystick;
+// import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants;
 import frc.robot.Robot;
 
 import static frc.robot.Constants.*;
@@ -15,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Shooter {
 
     private final Robot robot;
+    Constants constants = new Constants();
     double currentTime;
 
     /**
@@ -32,7 +34,7 @@ public class Shooter {
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
     
-    private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
+    // private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
 
     /** Configuration */
     private double shooterSpeed = 0.85;
@@ -41,7 +43,7 @@ public class Shooter {
     public void teleopPeriodic() {
         
         // Check input from right trigger
-        if (operator.getRawAxis(3) > 0.2) {
+        if (constants.operatorRT() > 0.2) {
             runShooter();
         }
     }

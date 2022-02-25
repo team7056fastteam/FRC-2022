@@ -5,7 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Joystick;
+// import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants;
 import frc.robot.Robot;
 
 import static frc.robot.Constants.*;
@@ -16,6 +17,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Intake {
 
     private final Robot robot;
+    private final Constants constants = new Constants();
 
     private final CANSparkMax rollerMotor;
     private final CANSparkMax conveyorMotor;
@@ -33,7 +35,7 @@ public class Intake {
         conveyorSwitch = new DigitalInput(CONVEYOR_LIMIT_SWITCH);
     }
 
-    private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
+    // private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
      
     /** Configuration */
     private double rollerSpeed = 0.5;
@@ -47,7 +49,7 @@ public class Intake {
     public void teleopPeriodic() {
 
         // Check input from left trigger
-        if (operator.getRawAxis(2) > 0.1) {
+        if (constants.operatorLT() > 0.1) {
             runRoller();
             runConv();
         }
@@ -56,12 +58,12 @@ public class Intake {
         }
 
         // Check input for A button
-        if (operator.getRawButton(1)) {
+        if (constants.operatorA()) {
             forceRunConv();
         }
 
         // Check input for B button
-        if (operator.getRawButton(2)) { 
+        if (constants.operatorB()) { 
             invertConveyor = true;
         }
         else {

@@ -4,18 +4,18 @@
 
 package frc.robot.subsystems;
 
-//import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants;
+// import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Robot;
 
 import static frc.robot.Constants.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Joystick;
-
 public class Lifter {
 
     private final Robot robot;
+    Constants constants = new Constants();
 
     private final CANSparkMax leftLiftMotor;
     private final CANSparkMax rightLiftMotor;
@@ -27,17 +27,17 @@ public class Lifter {
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
     }
     
-    private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
+    //private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
 
     /**  Configuration */
     private double liftModifier = 0.5;
-    double input = operator.getRawAxis(1) * liftModifier;
+    double input = constants.operatorLY() * liftModifier;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
-        
-        // Check input from Y axis
-        if (operator.getRawAxis(1) > 0.1) {
+
+        // Check input from Left Y axis
+        if (constants.operatorLY() > 0.1) {
 
             leftLiftMotor.set(input);
             rightLiftMotor.set(robot.invert(input));

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.Constants;
+
 import edu.wpi.first.wpilibj.Joystick;  
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,9 +22,10 @@ public class Robot extends TimedRobot {
     Shooter _shooter;
     Limelight _limelight;
     NavPod _navpod;
+    Constants constants = new Constants();
 
-    private final Joystick driver = new Joystick(0);
-    private final Joystick operator = new Joystick(1);
+    // private final Joystick driver = new Joystick(0);
+    // private final Joystick operator = new Joystick(1);
     private final Timer timer = new Timer();
     
     // Static variables
@@ -127,19 +130,19 @@ public class Robot extends TimedRobot {
         }
 
         // Allow autonomous selection
-        if (operator.getRawButton(1)) {
+        if (constants.operatorA()) {
             auton = 'a';
             System.out.println("Auton A selected...");
         }
-        else if (operator.getRawButton(2)) {
+        else if (constants.operatorB()) {
             auton = 'b';
             System.out.println("Auton B selected...");
         }
-        else if (operator.getRawButton(4)) {
+        else if (constants.operatorX()) {
             auton = 'c';
             System.out.println("Auton C selected...");
         }
-        else if (operator.getRawButton(3)) {
+        else if (constants.operatorY()) {
             auton = 'd';
             System.out.println("Auton D selected...");
         }
@@ -316,13 +319,13 @@ public class Robot extends TimedRobot {
         double zPercent = xT * -modifyAxis(driver.getRawAxis(0) * 0.75);
         */
         double xT = 1.0;
-        if (driver.getRawAxis(3) > 0.05) {
+        if (constants.driverRT() > 0.05) {
             xT = 0.65;
         }
 
-        double xPercent = -modifyAxis((driver.getRawAxis(5) * 0.8) * xT);
-        double yPercent = -modifyAxis((driver.getRawAxis(4) * 0.8) * xT);
-        double zPercent = -modifyAxis((driver.getRawAxis(0) * 0.7) * xT);
+        double xPercent = -modifyAxis((constants.driverRY() * 0.8) * xT);
+        double yPercent = -modifyAxis((constants.driverRX() * 0.8) * xT);
+        double zPercent = -modifyAxis((constants.driverLX() * 0.7) * xT);
         
         // Field Oriented Drive
         /*
@@ -383,6 +386,4 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         stop();
     }
-
-    // execute order 66
 }
