@@ -79,4 +79,19 @@ public final class Constants {
 
     // LED Control
     public static final int LED_CHANNEL = 2;
+
+    /*
+        Xbox Controller Inputs, in case needed:
+
+        joystick.getRawAxis(0) - Left X Axis        joystick.getRawButton(1) - A
+        joystick.getRawAxis(1) - Left Y Axis        joystick.getRawButton(2) - B
+        joystick.getRawAxis(2) - Left Trigger       joystick.getRawButton(3) - X
+        joystick.getRawAxis(3) - Right Trigger      joystick.getRawButton(4) - Y
+        joystick.getRawAxis(4) - Right X Axis       joystick.getRawButton(5) - Left Bumper
+        joystick.getRawAxis(5) - Right Y Axis       joystick.getRawButton(6) - Right Bumper
+                                                    joystick.getRawButton(7) - Back
+                                                    joystick.getRawButton(8) - Home
+                                                    joystick.getRawButton(9) - Left Stick
+                                                    joystick.getRawButton(10) - Right Stick
+    */
 }
