@@ -205,7 +205,7 @@ public class Robot extends TimedRobot {
         6. Drive to center line
     */
     public void autonB() {
-        
+
     }
 
     /*  
@@ -230,23 +230,22 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        /*
-        Code for joystick control (field oriented)
-
-        double xT = (driver.getRawAxis(3) * -0.5) + .5;
-
-        double yPercent = xT * -modifyAxis(driver.getRawAxis(4));
-        double xPercent = xT * -modifyAxis(driver.getRawAxis(5));
-        double zPercent = xT * -modifyAxis(driver.getRawAxis(0) * 0.75);
-        */
         double xT = 1.0;
-        if (constants.driverRT() > 0.05) {
+
+        // Check for driver RT held/pressed
+        if (constants.driverRT() > 0.5) {
             xT = 0.65;
         }
 
-        double xPercent = -modifyAxis((constants.driverRY() * 0.8) * xT);
-        double yPercent = -modifyAxis((constants.driverRX() * 0.8) * xT);
-        double zPercent = -modifyAxis((constants.driverLX() * 0.7) * xT);
+        // Check for driver RB pressed
+        // Zero the gyroscope while driving
+        if (constants.driverRB()) {
+            setGyroscopeHeading(0);
+        }
+
+        double xPercent = -modifyAxis((constants.driverRY() * 0.75) * xT);
+        double yPercent = -modifyAxis((constants.driverRX() * 0.75) * xT);
+        double zPercent = -modifyAxis((constants.driverLX() * 0.65) * xT);
         
         // Field Oriented Drive
         /*
@@ -266,10 +265,14 @@ public class Robot extends TimedRobot {
                 zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
         ));
 
-        // Constructor for other subsystems
+        // Send commands to other classes
         _limelight.teleopPeriodic();
         _lifter.teleopPeriodic();
+
+        /* The Intake subsystem is controlled in the Shooter.java
+        class to avoid multiple motor controller initialization events. */
         _shooter.teleopPeriodic();
+        // _intake.teleopPeriodic(); Depends on Shooter.java
     }
 
     /** This function reverts motor speeds without error */

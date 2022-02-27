@@ -6,13 +6,13 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants;
 
 public class Limelight {
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
-    private final Joystick driver = new Joystick(0);
+    private final Constants constants = new Constants();
     
     public Limelight() {}
 
@@ -22,7 +22,7 @@ public class Limelight {
 
     public void teleopPeriodic() {
 
-        if (driver.getRawButton(1)) {   
+        if (constants.driverA()) {   
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
         }
         else {
