@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-// import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -38,36 +37,32 @@ public class Intake {
     // private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
      
     /** Configuration */
-    private double rollerSpeed = 0.5;
-    private double conveyorSpeed = 0.25;
+    private double rollerSpeed = 0.75;
+    private double conveyorSpeed = 0.35;
 
-    private boolean invertConveyor;
     private boolean hasCounted = false;
     private int counter = 0;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
+        System.out.println(rollerMotor.getOutputCurrent());
 
         // Check input from left trigger
-        if (constants.operatorLT() > 0.1) {
+        if (constants.operatorLT() > 0.2) {
             runRoller();
             runConv();
         }
-        else {
-            hasCounted = false;
-        }
-
         // Check input for A button
-        if (constants.operatorA()) {
+        else if (constants.operatorA()) {
             forceRunConv();
         }
-
         // Check input for B button
-        if (constants.operatorB()) { 
-            invertConveyor = true;
+        else if (constants.operatorB()) { 
+            runConvInverted();
         }
         else {
-            invertConveyor = false;
+            hasCounted = false;
+            stop();
         }
 
         // Check how many balls are counted
@@ -98,8 +93,8 @@ public class Intake {
     }
 
     public void runConv() {
-        boolean cargoInIntake = intakeSwitch.get();
-        boolean cargoInConveyor = conveyorSwitch.get();
+        boolean cargoInIntake = (intakeSwitch.get());
+        boolean cargoInConveyor = (conveyorSwitch.get());
 
         /** 
          * [Intake switch, Conveyor switch]
@@ -107,37 +102,30 @@ public class Intake {
          * 1 - Cargo
         */
 
-        if (invertConveyor) {
-            runConvInverted();
+        // Case [0, 0]
+        if (!cargoInIntake && !cargoInConveyor) {
+            conveyorMotor.set(conveyorSpeed);
         }
+        // Case [1, 0]
+        else if (!cargoInIntake && cargoInConveyor) {
+            conveyorMotor.set(conveyorSpeed);
+        }
+        // Case [0, 1]
+        else if (cargoInIntake && !cargoInConveyor) {
+            conveyorMotor.set(0);
 
+            if (!hasCounted) {
+                hasCounted = true;
+                counter++;
+            }
+        }
+        // Case [1, 1]
         else {
+            conveyorMotor.set(conveyorSpeed);
 
-            // Case [0, 0]
-            if (!cargoInIntake && !cargoInConveyor) {
-                conveyorMotor.set(conveyorSpeed);
-            }
-            // Case [1, 0]
-            else if (!cargoInIntake && cargoInConveyor) {
-                conveyorMotor.set(conveyorSpeed);
-            }
-            // Case [0, 1]
-            else if (cargoInIntake && !cargoInConveyor) {
-                conveyorMotor.set(0);
-
-                if (!hasCounted) {
-                    hasCounted = true;
-                    counter++;
-                }
-            }
-            // Case [1, 1]
-            else {
-                conveyorMotor.set(conveyorSpeed);
-
-                if (!hasCounted) {
-                    hasCounted = true;
-                    counter++;
-                }
+            if (!hasCounted) {
+                hasCounted = true;
+                counter++;
             }
         }
     }

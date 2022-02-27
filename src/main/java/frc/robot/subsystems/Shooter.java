@@ -7,15 +7,14 @@ package frc.robot.subsystems;
 // import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants;
 import frc.robot.Robot;
-
 import static frc.robot.Constants.*;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Shooter {
 
     private final Robot robot;
+    private final Intake _intake;
     Constants constants = new Constants();
     double currentTime;
 
@@ -30,6 +29,7 @@ public class Shooter {
     public Shooter()
     {
         robot = new Robot();
+        _intake = new Intake();
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
@@ -37,20 +37,29 @@ public class Shooter {
     // private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
 
     /** Configuration */
-    private double shooterSpeed = 0.85;
+    private double shooterSpeed = 0.251;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
+        _intake.teleopPeriodic();
         
         // Check input from right trigger
         if (constants.operatorRT() > 0.2) {
             runShooter();
+            runConv();
+        }
+        else {
+            stop();
         }
     }
 
     public void runShooter() {
-        leftShooterMotor.set(shooterSpeed);
-        rightShooterMotor.set(robot.invert(shooterSpeed));
+        rightShooterMotor.set(shooterSpeed);
+        leftShooterMotor.set(robot.invert(shooterSpeed));
+    }
+
+    public void runConv() {
+        _intake.forceRunConv();
     }
 
     public void stop() {

@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
         // Initialize robot subsystems
         _drive = new Drivetrain();
         _navpod = new NavPod();
-        _intake = new Intake();
         _lifter = new Lifter();
         _shooter = new Shooter();
         _limelight = new Limelight();
@@ -81,7 +80,7 @@ public class Robot extends TimedRobot {
             setDefaultPosition(0, 0);
 
             // Update console with NavPod info every 25ms
-            _navpod.setAutoUpdate(0.025, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
+            _navpod.setAutoUpdate(0.10, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
             update.h, update.x, update.sx, update.y, update.sy));
         }
 
@@ -320,8 +319,8 @@ public class Robot extends TimedRobot {
             xT = 0.65;
         }
 
-        double xPercent = -modifyAxis((constants.driverRX() * 0.8) * xT);
-        double yPercent = -modifyAxis((constants.driverRY() * 0.8) * xT);
+        double xPercent = -modifyAxis((constants.driverRY() * 0.8) * xT);
+        double yPercent = -modifyAxis((constants.driverRX() * 0.8) * xT);
         double zPercent = -modifyAxis((constants.driverLX() * 0.7) * xT);
         
         // Field Oriented Drive
@@ -344,7 +343,6 @@ public class Robot extends TimedRobot {
 
         // Constructor for other subsystems
         _limelight.teleopPeriodic();
-        _intake.teleopPeriodic();
         _lifter.teleopPeriodic();
         _shooter.teleopPeriodic();
     }
