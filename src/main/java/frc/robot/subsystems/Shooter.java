@@ -65,5 +65,6 @@ public class Shooter {
     public void stop() {
         leftShooterMotor.set(0);
         rightShooterMotor.set(0);
+        _intake.stop();
     }
 }

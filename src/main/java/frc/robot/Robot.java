@@ -73,13 +73,10 @@ public class Robot extends TimedRobot {
             System.err.printf("config.rotationScaleFactorY: %f\n", config.rotationScaleFactorY);
             System.err.printf("config.translationScaleFactor: %f\n", config.translationScaleFactor);
 
-            // double distance = _navpod.getDistance();
-            // System.err.printf("distance: %f in\n", distance);
-
-            setGyroscopeHeading(90);
+            setGyroscopeHeading(0);
             setDefaultPosition(0, 0);
 
-            // Update console with NavPod info every 25ms
+            // Update console with NavPod info every 10ms
             _navpod.setAutoUpdate(0.10, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
             update.h, update.x, update.sx, update.y, update.sy));
         }
@@ -101,15 +98,6 @@ public class Robot extends TimedRobot {
     }
     
     private static double modifyAxis(double value) {
-        /*
-        // Deadband
-        value = deadband(value, 0.1);
-
-        // Square the axis
-        value = Math.copySign(value * value, value);
-
-        return value;
-        */
         return deadband(Math.copySign(value * value, value), 0.1);
     }
 
@@ -197,57 +185,13 @@ public class Robot extends TimedRobot {
     */
     public void autonA() {
         if (t > 0 && t < 2) {
-            // Drive towards hub
-            drive(0, .4, 0);
-            _shooter.stop();
-            _intake.stop();
-        }
-        else if (t > 2 && t < 4) {
-            // Stop at hub
-            // Use shooter & conv
-            stop();
             _shooter.runShooter();
-            _intake.forceRunConv();
-        }
-        else if (t > 4 && t < 7) {
-            // Leave hub
-            // Drive towards cargo
-            drive(0, -.5, 0);
-            _shooter.stop();
-            _intake.stop();
-        }
-        else if (t > 7 && t < 9) {
-            // Use intake & conv to pick up cargo
-            stop();
-            _intake.forceRunConv();
-            _intake.runRoller();
-        }
-        else if (t > 9 && t < 12) {
-            // Drive towards terminal
-            drive(0, -.5, 0);
-            _intake.stop();
-            _shooter.stop();
-        }
-        else if (t > 12 && t < 13) {
-            // Stop at terminal
-            stop();
-        }
-        else if (t > 13 && t < 17) {
-            // Drive to hub
-            drive(0, .5, 0);
-        }
-        else if (t > 17 && t < 19) {
-            // Stop at hub
-            // Use shooter & conv
-            stop();
-            _shooter.runShooter();
-            _intake.forceRunConv();
+            _shooter.runConv();
         }
         else {
-            // Stop everything, end of auton
-            stop();
             _shooter.stop();
-            _intake.stop();
+            // Drive in reverse towards ball
+            drive(0, -.4, 0);
         }
     }
 
@@ -261,26 +205,7 @@ public class Robot extends TimedRobot {
         6. Drive to center line
     */
     public void autonB() {
-        if (t > 0 && t < 2) {
-            // Drive towards hub
-            drive(0, .4, 0);
-            _shooter.stop();
-            _intake.stop();
-        }
-        else if (t > 2 && t < 4) {
-            // Stop at hub
-            // Use shooter & conv
-            stop();
-            _shooter.runShooter();
-            _intake.forceRunConv();
-        }
-        else if (t > 4 && t < 7) {
-            // Leave hub
-            // Drive towards cargo
-            drive(0, -.5, 0);
-            _shooter.stop();
-            _intake.stop();
-        }
+        
     }
 
     /*  
@@ -328,7 +253,7 @@ public class Robot extends TimedRobot {
         _drive.drive(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                           xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                          yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                          yPercWWWent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                           zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                           _drive.getRotation()));
         */
