@@ -39,6 +39,7 @@ public class Robot extends TimedRobot {
         // Initialize robot subsystems
         _drive = new Drivetrain();
         _navpod = new NavPod();
+        _intake = new Intake();
         _lifter = new Lifter();
         _shooter = new Shooter();
         _limelight = new Limelight();
@@ -77,7 +78,7 @@ public class Robot extends TimedRobot {
             setDefaultPosition(0, 0);
 
             // Update console with NavPod info every 10ms
-            _navpod.setAutoUpdate(0.10, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
+            _navpod.setAutoUpdate(0.15, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
             update.h, update.x, update.sx, update.y, update.sy));
         }
 
@@ -140,6 +141,9 @@ public class Robot extends TimedRobot {
         timer.start();
         t = 0;
 
+        // Align wheels to absolute zero
+        stop();
+
         System.out.println("Running Autonomous Function : " + String.valueOf(auton).toUpperCase());
     }
 
@@ -165,58 +169,45 @@ public class Robot extends TimedRobot {
         }
     }
 
-    /**
-    * Autonomous functions are labeled in order of importance
-    * and usage on the field.
-    * 
-    * Collector Positions - Functions to collect cargo and deliver it at a fast rate
-    * Defensive Positions - Functions to prioritize moving enemy cargo before collecting
-    */
-
-    /*  
-        Collector Position 1
-        1. Deposit cargo into hub
-        2. Drive towards cargo in center area
-        3. Collect cargo in center area
-        4. Drive towards terminal
-        5. Push cargo into terminal for human player
-        6. Return to hub
-        7. Deposit cargo into hub
-    */
     public void autonA() {
         if (t > 0 && t < 2) {
+            _drive.drive(new ChassisSpeeds(
+                modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                modifyAxis(0.15) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            ));
+            _intake.runConv();
+            _intake.runRollerAuton();
+        }
+        else if (t > 2 && t < 5) {
+            _drive.drive(new ChassisSpeeds(
+                -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                -modifyAxis(0.42) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            ));
+            _intake.runConv();
+            _intake.runRollerAuton();
+        }
+        else if (t > 5 && t < 5.5) {
+            stop();
+            _intake.stop();
+        }
+        else if (t > 5.5 && t < 7) {
             _shooter.runShooter();
-            _shooter.runConv();
+            _intake.forceRunConv();
+            stop();
         }
         else {
+            stop();
+            _intake.stop();
             _shooter.stop();
-            // Drive in reverse towards ball
-            drive(0, -.4, 0);
         }
     }
 
-    /*  
-        Collector Position 2
-        1. Deposit cargo into hub
-        2. Drive towards cargo in lower area
-        3. Collect cargo in lower area
-        4. Return to hub position
-        5. Deposit cargo into hub
-        6. Drive to center line
-    */
     public void autonB() {
 
     }
 
-    /*  
-        Defensive Position 1
-        1. Deposit cargo into hub
-        2. Drive towards enemy cargo in lower area
-        3. Collect enemy cargo in lower area
-        4. Drive towards hangar
-        5. Deposit enemy cargo at hangar
-        6. Drive to center line
-    */
     public void autonC() {
 
     }
@@ -268,11 +259,8 @@ public class Robot extends TimedRobot {
         // Send commands to other classes
         _limelight.teleopPeriodic();
         _lifter.teleopPeriodic();
-
-        /* The Intake subsystem is controlled in the Shooter.java
-        class to avoid multiple motor controller initialization events. */
+        _intake.teleopPeriodic();
         _shooter.teleopPeriodic();
-        // _intake.teleopPeriodic(); Depends on Shooter.java
     }
 
     /** This function reverts motor speeds without error */

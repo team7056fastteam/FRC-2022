@@ -45,8 +45,6 @@ public class Intake {
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
-        System.out.println(rollerMotor.getOutputCurrent());
-
         // Check input from left trigger
         if (constants.operatorLT() > 0.2) {
             runRoller();
@@ -86,6 +84,10 @@ public class Intake {
 
     public void runRoller() {
         rollerMotor.set(rollerSpeed);
+    }
+
+    public void runRollerAuton() {
+        rollerMotor.set(0.8);
     }
 
     public void forceRunConv() {
@@ -132,6 +134,7 @@ public class Intake {
 
     public void runConvInverted() {
         conveyorMotor.set(robot.invert(conveyorSpeed));
+        rollerMotor.set(robot.invert(rollerSpeed));
     }
 
     public void stop() {
