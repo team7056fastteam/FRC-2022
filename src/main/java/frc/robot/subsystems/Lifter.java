@@ -40,7 +40,7 @@ public class Lifter {
         if (constants.operatorLY() > 0.1) {
 
             leftLiftMotor.set(input);
-            rightLiftMotor.set(robot.invert(input));
+            rightLiftMotor.set(input);
         }
     }
 }
