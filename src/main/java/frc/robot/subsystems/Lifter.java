@@ -36,11 +36,11 @@ public class Lifter {
 
         if (operator.getRawButton(3)) {
             leftLiftMotor.set(-0.5);
-            rightLiftMotor.set(0.5);
+            rightLiftMotor.set(-0.5);
         }
         else if (operator.getRawButton(4)) {
             leftLiftMotor.set(0.5);
-            rightLiftMotor.set(-0.5);
+            rightLiftMotor.set(0.5);
         }
         else {
             leftLiftMotor.set(0.0);
