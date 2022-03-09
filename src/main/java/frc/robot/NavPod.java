@@ -31,11 +31,14 @@ class NavPodUpdate
     public double	h;      // heading (degrees)
 }
 
-
-
 public class NavPod extends Thread
 {
-    
+    private double _x = 0;
+    private double _sx = 0;
+    private double _y = 0;
+    private double _sy = 0;
+    private double _h = 0;
+
     private ReentrantLock               _lock = null;
     private Condition                   _signal = null;
     private SerialPort                  _serialPort = null;
@@ -45,7 +48,8 @@ public class NavPod extends Thread
 	private Hashtable<String, String>	_requestReply = null;
 	private byte				        _requestTag = 0;
 	private byte				        _nextTag = 1;
-	private Consumer<NavPodUpdate>      _callback = null;
+	private int				            _version = 0;
+    private Consumer<NavPodUpdate>      _callback = null;
 
 
     public NavPod()
@@ -143,7 +147,7 @@ public class NavPod extends Thread
 
 
 
-    public NavPodUpdate getUpdate()
+    NavPodUpdate getUpdate()
     {
         Hashtable<String, String> reply = new Hashtable<String, String>();
         if (!_request(reply, "UPDT", null))
@@ -212,7 +216,7 @@ public class NavPod extends Thread
         
         if (_request(reply, "PING", null) && reply.containsKey("VERS"))
         {
-            Integer.parseInt(reply.get("VERS"));
+            _version = Integer.parseInt(reply.get("VERS"));
             success = true;
         }
         
@@ -317,6 +321,7 @@ public class NavPod extends Thread
     }
 
 
+
     public void run()
     {
         _lock.lock();
@@ -337,7 +342,10 @@ public class NavPod extends Thread
                 byte[] bytes = _serialPort.read(available);
                 int count = bytes.length;
                 if (count == 0)
+                {
+                    Thread.sleep(5, 0);
                     continue;
+                }
                 
                 for (int index = 0; index < count; index += 1)
                 {
