@@ -21,8 +21,6 @@ public class Robot extends TimedRobot {
     NavPod _navpod;
     Constants constants = new Constants();
 
-    // private final Joystick driver = new Joystick(0);
-    // private final Joystick operator = new Joystick(1);
     private final Timer timer = new Timer();
     
     // Static variables
@@ -101,7 +99,7 @@ public class Robot extends TimedRobot {
     private static double modifyAxis(double value) {
         return deadband(Math.copySign(value * value, value), 0.1);
     }
-
+    
     /**
     * This function is called every robot packet, no matter the mode. Use this for items like
     * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
@@ -173,7 +171,7 @@ public class Robot extends TimedRobot {
         if (t > 0 && t < 2) {
             _drive.drive(new ChassisSpeeds(
                 modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                modifyAxis(0.15) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                 -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
             ));
             _intake.runConv();
@@ -182,7 +180,7 @@ public class Robot extends TimedRobot {
         else if (t > 2 && t < 5) {
             _drive.drive(new ChassisSpeeds(
                 -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                -modifyAxis(0.42) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                 -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
             ));
             _intake.runConv();
@@ -205,38 +203,7 @@ public class Robot extends TimedRobot {
     }
 
     public void autonB() {
-        if (t > 0 && t < 2) {
-            _drive.drive(new ChassisSpeeds(
-                modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                modifyAxis(0.15) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            ));
-            _intake.runConv();
-            _intake.runRollerAuton();
-        }
-        else if (t > 2 && t < 5) {
-            _drive.drive(new ChassisSpeeds(
-                -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                -modifyAxis(0.0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            ));
-            _intake.runConv();
-            _intake.runRollerAuton();
-        }
-        else if (t > 5 && t < 5.5) {
-            stop();
-            _intake.stop();
-        }
-        else if (t > 5.5 && t < 7) {
-            _shooter.runShooter();
-            _intake.forceRunConv();
-            stop();
-        }
-        else {
-            stop();
-            _intake.stop();
-            _shooter.stop();
-        }
+
     }
 
     public void autonC() {
