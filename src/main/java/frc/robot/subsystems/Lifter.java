@@ -5,8 +5,6 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
-// import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.Robot;
 
 import static frc.robot.Constants.*;
 import com.revrobotics.CANSparkMax;
@@ -16,7 +14,6 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Lifter {
 
-    private final Robot robot;
     Constants constants = new Constants();
 
     private final CANSparkMax leftLiftMotor;
@@ -24,7 +21,6 @@ public class Lifter {
 
     public Lifter()
     {
-        robot = new Robot();
         leftLiftMotor = new CANSparkMax(LIFT_LEFT_MOTOR, MotorType.kBrushless);
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
     }
