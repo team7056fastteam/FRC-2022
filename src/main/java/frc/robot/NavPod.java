@@ -53,7 +53,6 @@ public class NavPod extends Thread
 	private int				            _version = 0;
     private Consumer<NavPodUpdate>      _callback = null;
 
-
     public NavPod()
     {
         super();
@@ -90,8 +89,6 @@ public class NavPod extends Thread
                 System.err.printf("ERROR: NavPod firmware version query failed!\n");
         }
     }
-
-
 
     boolean isValid()
     {

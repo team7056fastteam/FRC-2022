@@ -76,8 +76,11 @@ public class Robot extends TimedRobot {
             setDefaultPosition(0, 0);
 
             // Update console with NavPod info every 10ms
-            _navpod.setAutoUpdate(0.15, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
-            update.h, update.x, update.sx, update.y, update.sy));
+            /* _navpod.setAutoUpdate(0.15, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
+            update.h, update.x, update.sx, update.y, update.sy)); */
+
+            // Keep heading calibrated
+            _navpod.setAutoUpdate(0.10, update -> gyroRotation = update.h);
         }
 
         // Initialize subsystems that need to be updated before autonomous/operator control
@@ -106,11 +109,6 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void robotPeriodic() {
-        // Check if NavPod has been initialized, run updates
-        if ((_navpod != null) && _navpod.isValid()) {
-            NavPodUpdate update = _navpod.getUpdate();
-            gyroRotation = update.h;
-        }
 
         // Allow autonomous selection
         if (constants.operatorA()) {
