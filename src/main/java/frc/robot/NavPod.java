@@ -33,11 +33,13 @@ class NavPodUpdate
 
 public class NavPod extends Thread
 {
+    /*
     private double _x = 0;
     private double _sx = 0;
     private double _y = 0;
     private double _sy = 0;
     private double _h = 0;
+    */
 
     private ReentrantLock               _lock = null;
     private Condition                   _signal = null;
