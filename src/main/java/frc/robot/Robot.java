@@ -19,6 +19,7 @@ public class Robot extends TimedRobot {
     Shooter _shooter;
     Limelight _limelight;
     NavPod _navpod;
+    LED _led;
     Constants constants = new Constants();
 
     private final Timer timer = new Timer();
@@ -41,6 +42,7 @@ public class Robot extends TimedRobot {
         _lifter = new Lifter();
         _shooter = new Shooter();
         _limelight = new Limelight();
+        _led = new LED();
 
         // Reset instance variables
         auton = 'a';
@@ -85,6 +87,7 @@ public class Robot extends TimedRobot {
 
         // Initialize subsystems that need to be updated before autonomous/operator control
         _limelight.robotInit();
+        _led.allianceColor();
     }
 
     private static double deadband(double value, double deadband) {
