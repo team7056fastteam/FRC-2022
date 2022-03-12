@@ -271,6 +271,11 @@ public class Robot extends TimedRobot {
     /** This function sets the gyro heading */
     public void setGyroscopeHeading(double h) { _navpod.resetH(h); }
 
+    /** This function forces the robot to stop and steer towards a valid target */
+    public void steerTowardsTarget(double steerPercent) {
+        _drive.drive(new ChassisSpeeds(0, 0, -modifyAxis(steerPercent) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    }
+
     /** This function sets the relative position of the NavPod */
     public void setDefaultPosition(double x, double y) { _navpod.resetXY(x, y); }
 
