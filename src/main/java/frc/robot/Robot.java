@@ -223,13 +223,13 @@ public class Robot extends TimedRobot {
         double xT = 1.0;
 
         // Check for driver RT held/pressed
-        if (constants.driverRT() > 0.5) {
+        if (constants.driverRB()) {
             xT = 0.65;
         }
 
         // Check for driver RB pressed
         // Zero the gyroscope while driving
-        if (constants.driverRB()) {
+        if (constants.driverRT() > 0.1) {
             setGyroscopeHeading(0);
         }
 
@@ -254,6 +254,10 @@ public class Robot extends TimedRobot {
                 yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                 zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
         ));
+
+        if (constants.driverLB()) {
+            _drive.lock();
+        }
 
         // Send commands to other classes
         _limelight.teleopPeriodic();

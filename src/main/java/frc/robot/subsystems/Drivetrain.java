@@ -135,4 +135,11 @@ public class Drivetrain {
     backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
     backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
   }
+
+  public void lock() {
+    frontLeftModule.set(0, 315 * (Math.PI / 180));
+    frontRightModule.set(0, 45 * (Math.PI / 180));
+    backLeftModule.set(0, 45 * (Math.PI / 180));
+    backRightModule.set(0, 315 * (Math.PI / 180));
+  }
 }
