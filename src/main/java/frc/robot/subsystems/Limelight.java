@@ -39,7 +39,7 @@ public class Limelight {
         float STEER_K = 0.009f;
 
         // Check for operator LB button
-        if (constants.driverLB()) {
+        if (constants.driverLT() > 0.1) {
             setLED(true);
 
             double x = tx.getDouble(0.0);
@@ -51,7 +51,10 @@ public class Limelight {
                 return;
             }
 
-            robot.steerTowardsTarget(x * STEER_K);
+            @SuppressWarnings("unused")
+            double steerVal = x * STEER_K;
+
+            // robot.steerTowardsTarget(x * STEER_K);
         }
 
         // Reset limelight
@@ -61,11 +64,15 @@ public class Limelight {
     }
 
     public void setLED(boolean mode) {
-        if (mode) {
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
+        if (mode == true) {
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
         }
         else {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
         }
+    }
+
+    public void disabledInit() {
+        setLED(false);
     }
 }

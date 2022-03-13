@@ -50,6 +50,7 @@ public class NavPod extends Thread
 	private Hashtable<String, String>	_requestReply = null;
 	private byte				        _requestTag = 0;
 	private byte				        _nextTag = 1;
+    @SuppressWarnings("unused")
 	private int				            _version = 0;
     private Consumer<NavPodUpdate>      _callback = null;
 

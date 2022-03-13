@@ -137,9 +137,9 @@ public class Drivetrain {
   }
 
   public void lock() {
-    frontLeftModule.set(0, 315 * (Math.PI / 180));
-    frontRightModule.set(0, 45 * (Math.PI / 180));
-    backLeftModule.set(0, 45 * (Math.PI / 180));
-    backRightModule.set(0, 315 * (Math.PI / 180));
+    frontLeftModule.set(0, 45 * (Math.PI / 180));
+    frontRightModule.set(0, 315 * (Math.PI / 180));
+    backLeftModule.set(0, 315 * (Math.PI / 180));
+    backRightModule.set(0, 45 * (Math.PI / 180));
   }
 }
