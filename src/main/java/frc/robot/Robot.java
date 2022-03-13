@@ -264,6 +264,7 @@ public class Robot extends TimedRobot {
         _lifter.teleopPeriodic();
         _intake.teleopPeriodic();
         _shooter.teleopPeriodic();
+        _led.teleopPeriodic();
     }
 
     public void setLED(double val) {
