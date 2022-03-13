@@ -12,11 +12,6 @@ public final class Constants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.4953;
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.4953;
 
-    /** Input/Controller Constants */
-
-    public static final int DRIVER_JOYSTICK_ID = 0;
-    public static final int OPERATOR_JOYSTICK_ID = 1;
-
     /*
         00-01 CAN : PDP, other
         02-05 CAN : Encoders
@@ -24,12 +19,6 @@ public final class Constants {
         20-29 CAN : Drive Motors
         30-39 CAN : Intake Motors
         40-49 CAN : Lifter Motors
-    */
-
-    /*
-        How to configure steer offsets:
-        Increase - Counter Clockwise
-        Decrease - Clockwise
     */
 
     /** Drive Constants */
@@ -81,21 +70,6 @@ public final class Constants {
 
     // LED Control
     public static final int LED_CHANNEL = 0;
-
-    /*
-        Xbox Controller Inputs, in case needed:
-
-        joystick.getRawAxis(0) - Left X Axis        joystick.getRawButton(1) - A
-        joystick.getRawAxis(1) - Left Y Axis        joystick.getRawButton(2) - B
-        joystick.getRawAxis(2) - Left Trigger       joystick.getRawButton(3) - X
-        joystick.getRawAxis(3) - Right Trigger      joystick.getRawButton(4) - Y
-        joystick.getRawAxis(4) - Right X Axis       joystick.getRawButton(5) - Left Bumper
-        joystick.getRawAxis(5) - Right Y Axis       joystick.getRawButton(6) - Right Bumper
-                                                    joystick.getRawButton(7) - Back
-                                                    joystick.getRawButton(8) - Home
-                                                    joystick.getRawButton(9) - Left Stick
-                                                    joystick.getRawButton(10) - Right Stick
-    */
 
     private static final Joystick driver = new Joystick(0);
     private static final Joystick operator = new Joystick(1);

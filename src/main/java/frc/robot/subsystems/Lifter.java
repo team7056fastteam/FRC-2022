@@ -25,7 +25,7 @@ public class Lifter {
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
     }
     
-    private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
+    private final Joystick operator = new Joystick(1);
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {

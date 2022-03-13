@@ -105,9 +105,17 @@ public class Intake {
          * 1 - Cargo
         */
 
+        if (cargoInIntake) {
+            if (!hasCounted) {
+                hasCounted = true;
+                counter++;
+            }
+        }
+
         // Case [0, 0]
         if (!cargoInIntake && !cargoInConveyor) {
             conveyorMotor.set(conveyorSpeed);
+            counter = 0;
         }
         // Case [1, 0]
         else if (!cargoInIntake && cargoInConveyor) {
@@ -116,20 +124,10 @@ public class Intake {
         // Case [0, 1]
         else if (cargoInIntake && !cargoInConveyor) {
             conveyorMotor.set(0);
-
-            if (!hasCounted) {
-                hasCounted = true;
-                counter++;
-            }
         }
         // Case [1, 1]
         else {
             conveyorMotor.set(conveyorSpeed);
-
-            if (!hasCounted) {
-                hasCounted = true;
-                counter++;
-            }
         }
     }
 
