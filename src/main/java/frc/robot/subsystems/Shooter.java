@@ -10,6 +10,9 @@ import static frc.robot.Constants.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+
 public class Shooter {
 
     private final Robot robot;
@@ -25,9 +28,12 @@ public class Shooter {
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
+    
+    private static final Joystick operator = new Joystick(1);
 
     /** Configuration */
-    private double shooterSpeed = 0.251;
+    double[] speeds = {.25, .45, .65, .85, .95};
+    int index = 0;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
@@ -39,18 +45,37 @@ public class Shooter {
             stop();
         }
 
-        // Check input from RB button
+
+        // Check input from RB
         if (constants.operatorRB()) {
-            shooterSpeed = 0.8;
+            if (index < speeds.length) {
+                index++;
+                operator.setRumble(RumbleType.kLeftRumble, 0);
+                operator.setRumble(RumbleType.kRightRumble, 0);
+            }
+            else {
+                operator.setRumble(RumbleType.kLeftRumble, 0.5);
+                operator.setRumble(RumbleType.kRightRumble, 0.5);
+            }
         }
-        else {
-            shooterSpeed = 0.251;
+
+        // Check input from LB
+        else if (constants.operatorLB()) {
+            if (index > 0) {
+                operator.setRumble(RumbleType.kLeftRumble, 0);
+                operator.setRumble(RumbleType.kRightRumble, 0);
+                index--;
+            }
+            else {
+                operator.setRumble(RumbleType.kLeftRumble, 0.5);
+                operator.setRumble(RumbleType.kRightRumble, 0.5);
+            }
         }
     }
 
     public void runShooter() {
-        rightShooterMotor.set(shooterSpeed);
-        leftShooterMotor.set(robot.invert(shooterSpeed));
+        rightShooterMotor.set(speeds[index]);
+        leftShooterMotor.set(robot.invert(speeds[index]));
     }
 
 
