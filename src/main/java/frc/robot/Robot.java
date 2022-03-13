@@ -266,6 +266,14 @@ public class Robot extends TimedRobot {
         _shooter.teleopPeriodic();
     }
 
+    public void setLED(double val) {
+        _led.set(val);
+    }
+
+    public void resetLED() {
+        //_led.allianceColor();
+    }
+
     /** This function reverts motor speeds without error */
     public double invert(double value) { return (value * (-1)); }
 

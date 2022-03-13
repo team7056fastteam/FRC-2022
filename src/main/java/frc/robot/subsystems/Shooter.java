@@ -32,8 +32,10 @@ public class Shooter {
     private static final Joystick operator = new Joystick(1);
 
     /** Configuration */
-    double[] speeds = {.25, .45, .65, .85, .95};
+    double[] speeds = {.25, .35, .45, .55, .90};
     int index = 0;
+    boolean hasInc = false;
+    boolean hasDec = false;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
@@ -45,10 +47,11 @@ public class Shooter {
             stop();
         }
 
-
         // Check input from RB
-        if (constants.operatorRB()) {
-            if (index < speeds.length) {
+        if (constants.operatorRB() && hasInc == false) {
+            hasInc = true;
+
+            if (index < (speeds.length - 1)) {
                 index++;
                 operator.setRumble(RumbleType.kLeftRumble, 0);
                 operator.setRumble(RumbleType.kRightRumble, 0);
@@ -60,7 +63,9 @@ public class Shooter {
         }
 
         // Check input from LB
-        else if (constants.operatorLB()) {
+        else if (constants.operatorLB() && hasDec == false) {
+            hasDec = true;
+
             if (index > 0) {
                 operator.setRumble(RumbleType.kLeftRumble, 0);
                 operator.setRumble(RumbleType.kRightRumble, 0);
@@ -70,6 +75,18 @@ public class Shooter {
                 operator.setRumble(RumbleType.kLeftRumble, 0.5);
                 operator.setRumble(RumbleType.kRightRumble, 0.5);
             }
+        }
+
+        if (!(constants.operatorLB())) {
+            hasDec = false;
+            operator.setRumble(RumbleType.kLeftRumble, 0);
+            operator.setRumble(RumbleType.kRightRumble, 0);
+        }
+
+        if (!(constants.operatorRB())) {
+            hasInc = false;
+            operator.setRumble(RumbleType.kLeftRumble, 0);
+            operator.setRumble(RumbleType.kRightRumble, 0);
         }
     }
 

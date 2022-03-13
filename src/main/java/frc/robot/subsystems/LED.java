@@ -46,9 +46,11 @@ public class LED {
         boolean isRed = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(true);
 
         if (isRed == true) {
+            led.set(0.49);
             led.set(0.61);
         } 
         else { 
+            led.set(0.49);
             led.set(0.87);
         }
     }

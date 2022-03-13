@@ -43,9 +43,9 @@ public class Lifter {
             rightLiftMotor.set(0.0);
         }
 
-        if (constants.operatorRY() > 0.1) {
-            leftLiftMotor.set(constants.operatorRY());
-            rightLiftMotor.set(constants.operatorRY());
+        if (constants.operatorRY() > 0.1 || constants.operatorRY() < -0.1) {
+            leftLiftMotor.set(constants.operatorRY() * .75);
+            rightLiftMotor.set(constants.operatorRY() * .75);
         }
     }
 }

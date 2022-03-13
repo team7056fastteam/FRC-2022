@@ -16,7 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Intake {
 
     private final Robot robot;
-    private final LED led;
+    //private final LED led;
     private final Constants constants = new Constants();
 
     private final CANSparkMax rollerMotor;
@@ -27,7 +27,7 @@ public class Intake {
 
     public Intake() {
         robot = new Robot();
-        led = new LED();
+        //led = new LED();
 
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);
         conveyorMotor = new CANSparkMax(INTAKE_CONVEYOR_MOTOR, MotorType.kBrushless);
@@ -65,10 +65,12 @@ public class Intake {
 
         // Check how many balls are counted
         if (counter == 1) {
-            led.yellow();
+            //led.yellow();
+            //robot.setLED(0.69);
         }
         else if (counter == 2) {
-            led.purple();
+            //led.purple();
+            //robot.setLED(0.91);
         }
         else if (counter == 3) {
 
@@ -76,8 +78,7 @@ public class Intake {
             counter = 0;
         }
         else {
-            // LED off
-            led.allianceColor();
+            //robot.resetLED();
         }
     }
 
