@@ -38,6 +38,14 @@ public class Shooter {
         else {
             stop();
         }
+
+        // Check input from RB button
+        if (constants.operatorRB()) {
+            shooterSpeed = 0.8;
+        }
+        else {
+            shooterSpeed = 0.251;
+        }
     }
 
     public void runShooter() {
