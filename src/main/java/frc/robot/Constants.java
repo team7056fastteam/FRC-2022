@@ -80,7 +80,7 @@ public final class Constants {
     public static final int CONVEYOR_LIMIT_SWITCH = 1;
 
     // LED Control
-    public static final int LED_CHANNEL = 2;
+    public static final int LED_CHANNEL = 0;
 
     /*
         Xbox Controller Inputs, in case needed:
