@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-// import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import static frc.robot.Constants.*;
@@ -17,11 +16,6 @@ public class Shooter {
     Constants constants = new Constants();
     double currentTime;
 
-    /**
-     * Motors are currently initialized as CAN-Spark Max, but this might
-     * change in the future. If using a Talon SRX, change the static
-     * initialized controllers from CANSparkMax to TalonSRX
-     */
     private final CANSparkMax leftShooterMotor;
     private final CANSparkMax rightShooterMotor;
 
@@ -31,8 +25,6 @@ public class Shooter {
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
-    
-    // private final Joystick operator = new Joystick(OPERATOR_JOYSTICK_ID);
 
     /** Configuration */
     private double shooterSpeed = 0.251;
