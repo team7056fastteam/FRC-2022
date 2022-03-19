@@ -92,8 +92,6 @@ public final class Constants {
     public boolean driverLS() { return driver.getRawButton(9); }
     public boolean driverRS() { return driver.getRawButton(10); }
 
-    
-    
     public double operatorLX() { return operator.getRawAxis(0); }
     public double operatorLY() { return operator.getRawAxis(1); }
     public double operatorLT() { return operator.getRawAxis(2); }

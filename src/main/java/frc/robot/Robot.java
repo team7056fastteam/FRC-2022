@@ -295,16 +295,6 @@ public class Robot extends TimedRobot {
         _drive.drive(new ChassisSpeeds(0, 0, 0));
     }
 
-    /** This function allows an easy drive function to exist for autonomous */
-    public void drive(double translationX, double translationY, double rotation) {
-        _drive.drive(
-            new ChassisSpeeds(
-                -modifyAxis(translationX) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                -modifyAxis(translationX) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(translationX) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-        ));
-    }
-
     @Override
     public void disabledInit() {
         stop();
@@ -314,40 +304,5 @@ public class Robot extends TimedRobot {
 
         // Set LEDs to alliance color
         _led.allianceColor();
-    }
-
-    // Pathfinding calculations
-    public double[] pathFinder(double currentX, double currentY, double currentAngle, double x, double y,
-            double targetAngle,
-            double maxSpeed) {
-
-        double[] speed = { 0.0, 0.0, 0.0 };
-
-        double x_dis = x - currentX;
-        double y_dis = y - currentY;
-        // double angle = targetAngle - currentAngle;
-        
-        // Disable pathfinding if robot is close to zero
-        if (Math.abs(x_dis) < 1) {
-            x_dis = 0;
-        }
-        if (Math.abs(y_dis) < 1) {
-            y_dis = 0;
-        }
-
-        speed[1] = Math.abs(Math.log10(x_dis) * maxSpeed) * (x_dis / Math.abs(x_dis));
-        speed[2] = Math.abs(Math.log10(y_dis) * maxSpeed) * (x_dis / Math.abs(x_dis));
-        speed[3] = 0.0;
-
-        // Limit speed to max speed
-        if (speed[1] > maxSpeed || speed[1] < -maxSpeed) {
-            speed[1] = (x_dis / Math.abs(x_dis)) * maxSpeed;
-        }
-
-        if (speed[2] > maxSpeed || speed[2] < -maxSpeed) {
-            speed[2] = (x_dis / Math.abs(x_dis)) * maxSpeed;
-        }
-
-        return speed;
     }
 }
