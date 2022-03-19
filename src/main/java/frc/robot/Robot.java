@@ -172,7 +172,7 @@ public class Robot extends TimedRobot {
         if (t > 0 && t < 2) {
             _drive.drive(new ChassisSpeeds(
                 modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                 -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
             ));
             _intake.runConv();
@@ -272,7 +272,7 @@ public class Robot extends TimedRobot {
     }
 
     public void resetLED() {
-        //_led.allianceColor();
+        _led.allianceColor();
     }
 
     /** This function reverts motor speeds without error */

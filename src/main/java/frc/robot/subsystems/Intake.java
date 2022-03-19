@@ -65,12 +65,10 @@ public class Intake {
 
         // Check how many balls are counted
         if (counter == 1) {
-            //led.yellow();
-            //robot.setLED(0.69);
+            robot.setLED(0.69);
         }
         else if (counter == 2) {
-            //led.purple();
-            //robot.setLED(0.91);
+            robot.setLED(0.91);
         }
         else if (counter == 3) {
 
@@ -78,7 +76,7 @@ public class Intake {
             counter = 0;
         }
         else {
-            //robot.resetLED();
+            robot.resetLED();
         }
     }
 
