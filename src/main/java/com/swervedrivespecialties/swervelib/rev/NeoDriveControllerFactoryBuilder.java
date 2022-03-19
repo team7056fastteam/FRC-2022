@@ -53,7 +53,9 @@ public final class NeoDriveControllerFactoryBuilder {
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
+
             // Set neutral mode to brake
+            // **This will override the SparkMAX settings on each motor controller**
             motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
             // Setup encoder
