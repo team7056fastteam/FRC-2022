@@ -9,8 +9,8 @@ import java.util.Objects;
  * Each setting is initialized to a default that should be adequate for most use cases.
  */
 public class Mk3ModuleConfiguration {
-    private double nominalVoltage = 12.0;
-    private double driveCurrentLimit = 80.0;
+    private double nominalVoltage = 15.0;
+    private double driveCurrentLimit = 40.0;
     private double steerCurrentLimit = 20.0;
 
     public double getNominalVoltage() {
