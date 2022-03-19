@@ -28,7 +28,7 @@ public class Drivetrain {
   NavPod _navpod;
   Robot _robot = new Robot();
 
-  private static final double MAX_VOLTAGE = 12.0;
+  private static final double MAX_VOLTAGE = 15.0;
   public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.14528;
   public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
         Math.hypot(Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
@@ -45,7 +45,7 @@ public class Drivetrain {
             new Translation2d(-Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0)
   );
   
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(_robot.getGyroscopeRotation()));
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, _robot.getGyroscopeRotation2d());
 
   public Drivetrain() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");

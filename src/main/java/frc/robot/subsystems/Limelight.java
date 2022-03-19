@@ -54,14 +54,12 @@ public class Limelight {
             @SuppressWarnings("unused")
             double steerVal = x * STEER_K;
 
-            robot.aimAtTarget(x * STEER_K);
-            robot.enableTargeting();
+            //robot.aimAtTarget(x * STEER_K);
         }
 
         // Reset limelight
         else {
             setLED(false);
-            robot.disableTargeting();
         }
     }
 

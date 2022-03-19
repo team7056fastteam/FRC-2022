@@ -27,8 +27,6 @@ public class Robot extends TimedRobot {
     char auton;
     double gyroRotation;
     double t;
-    boolean isTargeting = false;
-    boolean party = false;
 
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -121,14 +119,6 @@ public class Robot extends TimedRobot {
             auton = 'b';
             System.out.println("Red/Blue High Goal");
         }
-        else if (constants.operatorX()) {
-            auton = 'c';
-            System.out.println("Auton C selected...");
-        }
-        else if (constants.operatorY()) {
-            auton = 'd';
-            System.out.println("Auton D selected...");
-        }
     }
 
     /** This function is run once each time the robot enters autonomous mode. */
@@ -138,11 +128,8 @@ public class Robot extends TimedRobot {
         timer.reset();
         timer.start();
         t = 0;
-
-        // Align wheels to absolute zero
+        
         stop();
-
-        System.out.println("Running Autonomous Function : " + String.valueOf(auton).toUpperCase());
     }
 
     /** This function is called periodically during autonomous mode. */
@@ -156,13 +143,8 @@ public class Robot extends TimedRobot {
         else if (auton == 'b') {
             autonB();
         }
-        else if (auton == 'c') {
-            autonC();
-        }
-        else if (auton == 'd') {
-        }
         else {
-            // Default to auton mode A if necessary
+            // Default to auton mode A at startup
             auton = 'a';
         }
     }
@@ -206,22 +188,16 @@ public class Robot extends TimedRobot {
 
     }
 
-    public void autonC() {
-
-    }
-
     /** This function is run once each time the robot enters operator control. */
     @Override
     public void teleopInit() {
-
     }
 
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        double xT = 1.0;
-
         // Check for driver RT held/pressed
+        double xT = 1.0;
         if (constants.driverRB()) {
             xT = 0.65;
         }
@@ -247,14 +223,12 @@ public class Robot extends TimedRobot {
         */
 
         // Robot Oriented Drive
-        if (!isTargeting) {
-            _drive.drive(
+        _drive.drive(
             new ChassisSpeeds(
                 xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                 yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                 zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
             ));
-        }
 
         if (constants.driverLB()) {
             _drive.lock();
@@ -265,37 +239,6 @@ public class Robot extends TimedRobot {
         _lifter.teleopPeriodic();
         _intake.teleopPeriodic();
         _shooter.teleopPeriodic();
-    }
-
-    public void enablePartyMode() {
-        party = true;
-    }
-
-    public void getParty() {
-        if (party) {
-            _intake.setParty();
-        }
-        else {
-            _intake.endParty();
-        }
-    }
-
-    public void aimAtTarget(double value) {
-        _drive.drive(
-            new ChassisSpeeds(
-                0,
-                0,
-                value * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            )
-        );
-    }
-
-    public void enableTargeting() {
-        isTargeting = true;
-    }
-
-    public void disableTargeting() {
-        isTargeting = false;
     }
 
     /** This function reverts motor speeds without error */

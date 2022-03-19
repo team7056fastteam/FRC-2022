@@ -36,12 +36,10 @@ public class Lifter {
         if (operator.getRawButton(3)) {
             leftLiftMotor.set(-0.5);
             rightLiftMotor.set(-0.5);
-            robot.enablePartyMode();
         }
         else if (operator.getRawButton(4)) {
             leftLiftMotor.set(0.5);
             rightLiftMotor.set(0.5);
-            robot.enablePartyMode();
         }
         else {
             leftLiftMotor.set(0.0);
@@ -51,7 +49,6 @@ public class Lifter {
         if (constants.operatorRY() > 0.1 || constants.operatorRY() < -0.1) {
             leftLiftMotor.set(constants.operatorRY() * .75);
             rightLiftMotor.set(constants.operatorRY() * .75);
-            robot.enablePartyMode();
         }
     }
 }

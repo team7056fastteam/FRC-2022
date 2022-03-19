@@ -7,8 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 
 public final class Constants {
-    /** Chassis Constants */
-
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.4953;
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.4953;
 
@@ -47,8 +45,6 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 4;
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(37.353515625);
 
-    /** Intake/Shooter Constants */
-
     // Intake Module
     public static final int INTAKE_ROLLER_MOTOR = 30;
     public static final int INTAKE_CONVEYOR_MOTOR = 31;
@@ -57,12 +53,9 @@ public final class Constants {
     public static final int SHOOTER_LEFT_MOTOR = 32;
     public static final int SHOOTER_RIGHT_MOTOR = 33;
 
-    /** Lift Constants */
-
+    // Lift Module
     public static final int LIFT_LEFT_MOTOR = 40;
     public static final int LIFT_RIGHT_MOTOR = 41;
-
-    /** Digital Input Constants */
     
     // Limit Switches
     public static final int INTAKE_LIMIT_SWITCH = 0;
