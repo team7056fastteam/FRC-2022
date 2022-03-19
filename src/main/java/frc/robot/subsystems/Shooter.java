@@ -32,7 +32,7 @@ public class Shooter {
     private static final Joystick operator = new Joystick(1);
 
     /** Configuration */
-    double[] speeds = {.25, .35, .45, .55, .90};
+    double[] speeds = {.70, .35, .45, .55, .25};
     int index = 0;
     boolean hasInc = false;
     boolean hasDec = false;
