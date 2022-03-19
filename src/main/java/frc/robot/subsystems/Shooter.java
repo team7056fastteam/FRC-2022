@@ -10,9 +10,6 @@ import static frc.robot.Constants.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-
 public class Shooter {
 
     private final Robot robot;
@@ -28,11 +25,9 @@ public class Shooter {
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
-    
-    private static final Joystick operator = new Joystick(1);
 
     /** Configuration */
-    double[] speeds = {.25, .35, .45, .55, .90};
+    double speed = .25;
     int index = 0;
     boolean hasInc = false;
     boolean hasDec = false;
@@ -47,54 +42,18 @@ public class Shooter {
             stop();
         }
 
-        // Check input from RB
-        if (constants.operatorRB() && hasInc == false) {
-            hasInc = true;
-
-            if (index < (speeds.length - 1)) {
-                index++;
-                operator.setRumble(RumbleType.kLeftRumble, 0);
-                operator.setRumble(RumbleType.kRightRumble, 0);
-            }
-            else {
-                operator.setRumble(RumbleType.kLeftRumble, 0.5);
-                operator.setRumble(RumbleType.kRightRumble, 0.5);
-            }
+        if (constants.operatorRB()) {
+            speed = .65;
         }
-
-        // Check input from LB
-        else if (constants.operatorLB() && hasDec == false) {
-            hasDec = true;
-
-            if (index > 0) {
-                operator.setRumble(RumbleType.kLeftRumble, 0);
-                operator.setRumble(RumbleType.kRightRumble, 0);
-                index--;
-            }
-            else {
-                operator.setRumble(RumbleType.kLeftRumble, 0.5);
-                operator.setRumble(RumbleType.kRightRumble, 0.5);
-            }
-        }
-
-        if (!(constants.operatorLB())) {
-            hasDec = false;
-            operator.setRumble(RumbleType.kLeftRumble, 0);
-            operator.setRumble(RumbleType.kRightRumble, 0);
-        }
-
-        if (!(constants.operatorRB())) {
-            hasInc = false;
-            operator.setRumble(RumbleType.kLeftRumble, 0);
-            operator.setRumble(RumbleType.kRightRumble, 0);
+        else {
+            speed = .25;
         }
     }
 
     public void runShooter() {
-        rightShooterMotor.set(speeds[index]);
-        leftShooterMotor.set(robot.invert(speeds[index]));
+        rightShooterMotor.set(speed);
+        leftShooterMotor.set(robot.invert(speed));
     }
-
 
     public void stop() {
         leftShooterMotor.set(0);
