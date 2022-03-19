@@ -24,6 +24,7 @@ public class LED {
 
     public void teleopPeriodic() {
         led.set(ledVal);
+        allianceColor();
     }
     
     public void allianceColor() {
