@@ -19,7 +19,6 @@ public class Robot extends TimedRobot {
     Shooter _shooter;
     Limelight _limelight;
     NavPod _navpod;
-    LED _led;
     Constants constants = new Constants();
 
     private final Timer timer = new Timer();
@@ -28,6 +27,8 @@ public class Robot extends TimedRobot {
     char auton;
     double gyroRotation;
     double t;
+    boolean isTargeting = false;
+    boolean party = false;
 
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -42,7 +43,6 @@ public class Robot extends TimedRobot {
         _lifter = new Lifter();
         _shooter = new Shooter();
         _limelight = new Limelight();
-        _led = new LED();
 
         // Reset instance variables
         auton = 'a';
@@ -87,7 +87,6 @@ public class Robot extends TimedRobot {
 
         // Initialize subsystems that need to be updated before autonomous/operator control
         _limelight.robotInit();
-        _led.allianceColor();
     }
 
     private static double deadband(double value, double deadband) {
@@ -116,11 +115,11 @@ public class Robot extends TimedRobot {
         // Allow autonomous selection
         if (constants.operatorA()) {
             auton = 'a';
-            System.out.println("Auton A selected...");
+            System.out.println("Red/Blue Lower Goal");
         }
         else if (constants.operatorB()) {
             auton = 'b';
-            System.out.println("Auton B selected...");
+            System.out.println("Red/Blue High Goal");
         }
         else if (constants.operatorX()) {
             auton = 'c';
@@ -130,8 +129,6 @@ public class Robot extends TimedRobot {
             auton = 'd';
             System.out.println("Auton D selected...");
         }
-
-        _led.robotPeriodic();
     }
 
     /** This function is run once each time the robot enters autonomous mode. */
@@ -250,12 +247,14 @@ public class Robot extends TimedRobot {
         */
 
         // Robot Oriented Drive
-        _drive.drive(
+        if (!isTargeting) {
+            _drive.drive(
             new ChassisSpeeds(
                 xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                 yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
                 zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-        ));
+            ));
+        }
 
         if (constants.driverLB()) {
             _drive.lock();
@@ -266,6 +265,37 @@ public class Robot extends TimedRobot {
         _lifter.teleopPeriodic();
         _intake.teleopPeriodic();
         _shooter.teleopPeriodic();
+    }
+
+    public void enablePartyMode() {
+        party = true;
+    }
+
+    public void getParty() {
+        if (party) {
+            _intake.setParty();
+        }
+        else {
+            _intake.endParty();
+        }
+    }
+
+    public void aimAtTarget(double value) {
+        _drive.drive(
+            new ChassisSpeeds(
+                0,
+                0,
+                value * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            )
+        );
+    }
+
+    public void enableTargeting() {
+        isTargeting = true;
+    }
+
+    public void disableTargeting() {
+        isTargeting = false;
     }
 
     /** This function reverts motor speeds without error */
@@ -288,21 +318,11 @@ public class Robot extends TimedRobot {
         _drive.drive(new ChassisSpeeds(0, 0, 0));
     }
 
-    public void setLED(double LED) {
-        _led.set(LED);
-    }
-
-    public void resetLED() {
-        _led.allianceColor();
-    }
     @Override
     public void disabledInit() {
         stop();
 
         // Disable Limelight
         _limelight.disabledInit();
-
-        // Set LEDs to alliance color
-        _led.allianceColor();
     }
 }

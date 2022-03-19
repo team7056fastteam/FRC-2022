@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -16,7 +17,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Intake {
 
     private final Robot robot;
-    //private final LED led;
+
+    Spark LED = new Spark(0);
     private final Constants constants = new Constants();
 
     private final CANSparkMax rollerMotor;
@@ -27,7 +29,6 @@ public class Intake {
 
     public Intake() {
         robot = new Robot();
-        //led = new LED();
 
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);
         conveyorMotor = new CANSparkMax(INTAKE_CONVEYOR_MOTOR, MotorType.kBrushless);
@@ -45,6 +46,9 @@ public class Intake {
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
+        
+        System.out.println(counter);
+
         // Check input from left trigger
         if (constants.operatorLT() > 0.2) {
             runRoller();
@@ -65,10 +69,10 @@ public class Intake {
 
         // Check how many balls are counted
         if (counter == 1) {
-            robot.setLED(0.69);
+            LED.set(0.69);
         }
         else if (counter == 2) {
-            robot.setLED(0.91);
+            LED.set(0.93);
         }
         else if (counter == 3) {
 
@@ -76,7 +80,7 @@ public class Intake {
             counter = 0;
         }
         else {
-            robot.resetLED();
+            LED.set(.91);
         }
     }
 
@@ -104,25 +108,28 @@ public class Intake {
          * 1 - Cargo
         */
 
-        if (cargoInIntake) {
-            if (!hasCounted) {
-                hasCounted = true;
-                counter++;
-            }
-        }
-
         // Case [0, 0]
         if (!cargoInIntake && !cargoInConveyor) {
             conveyorMotor.set(conveyorSpeed);
-            counter = 0;
+            if (counter == 2) {
+                counter = 0;
+            }
         }
         // Case [1, 0]
         else if (!cargoInIntake && cargoInConveyor) {
             conveyorMotor.set(conveyorSpeed);
+            if (counter == 1) {
+                counter++;
+                hasCounted = true;
+            }
         }
         // Case [0, 1]
         else if (cargoInIntake && !cargoInConveyor) {
             conveyorMotor.set(0);
+            if (!hasCounted && counter == 0) {
+                hasCounted = true;
+                counter++;
+            }
         }
         // Case [1, 1]
         else {
@@ -138,5 +145,13 @@ public class Intake {
     public void stop() {
         conveyorMotor.set(0);
         rollerMotor.set(0);
+    }
+
+    public void setParty() {
+        LED.set(-.97);
+    }
+
+    public void endParty() {
+        LED.set(.91);
     }
 }

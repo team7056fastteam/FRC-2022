@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 import static frc.robot.Constants.*;
 import com.revrobotics.CANSparkMax;
@@ -15,12 +16,14 @@ import edu.wpi.first.wpilibj.Joystick;
 public class Lifter {
 
     Constants constants = new Constants();
+    Robot robot;
 
     private final CANSparkMax leftLiftMotor;
     private final CANSparkMax rightLiftMotor;
 
     public Lifter()
     {
+        robot = new Robot();
         leftLiftMotor = new CANSparkMax(LIFT_LEFT_MOTOR, MotorType.kBrushless);
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
     }
@@ -33,10 +36,12 @@ public class Lifter {
         if (operator.getRawButton(3)) {
             leftLiftMotor.set(-0.5);
             rightLiftMotor.set(-0.5);
+            robot.enablePartyMode();
         }
         else if (operator.getRawButton(4)) {
             leftLiftMotor.set(0.5);
             rightLiftMotor.set(0.5);
+            robot.enablePartyMode();
         }
         else {
             leftLiftMotor.set(0.0);
@@ -46,6 +51,7 @@ public class Lifter {
         if (constants.operatorRY() > 0.1 || constants.operatorRY() < -0.1) {
             leftLiftMotor.set(constants.operatorRY() * .75);
             rightLiftMotor.set(constants.operatorRY() * .75);
+            robot.enablePartyMode();
         }
     }
 }
