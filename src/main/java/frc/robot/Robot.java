@@ -130,6 +130,8 @@ public class Robot extends TimedRobot {
             auton = 'd';
             System.out.println("Auton D selected...");
         }
+
+        _led.robotPeriodic();
     }
 
     /** This function is run once each time the robot enters autonomous mode. */
@@ -264,7 +266,6 @@ public class Robot extends TimedRobot {
         _lifter.teleopPeriodic();
         _intake.teleopPeriodic();
         _shooter.teleopPeriodic();
-        _led.teleopPeriodic();
     }
 
     /** This function reverts motor speeds without error */
@@ -287,6 +288,13 @@ public class Robot extends TimedRobot {
         _drive.drive(new ChassisSpeeds(0, 0, 0));
     }
 
+    public void setLED(double LED) {
+        _led.set(LED);
+    }
+
+    public void resetLED() {
+        _led.allianceColor();
+    }
     @Override
     public void disabledInit() {
         stop();

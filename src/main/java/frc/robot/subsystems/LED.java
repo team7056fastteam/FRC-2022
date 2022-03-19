@@ -8,26 +8,24 @@ public class LED {
 
     Constants constants = new Constants();
 
-    private final Spark led;
+    Spark led = new Spark(0);
     double ledVal;
 
     public LED()
     {
-        led = new Spark(Constants.LED_CHANNEL);
+        //led = new Spark(Constants.LED_CHANNEL);
     }
 
-    public void set(double val) {
-        if ((val >= -1.0) && (val <= 1.0)) {
-            ledVal = val;
-        }
-    }
-
-    public void teleopPeriodic() {
+    public void robotPeriodic() {
         led.set(ledVal);
-        allianceColor();
+    }
+
+    public void set(double LED) {
+        ledVal = LED;
     }
     
     public void allianceColor() {
+/*
         // Retrieve FMS data
         boolean isRed = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(true);
 
@@ -37,5 +35,15 @@ public class LED {
         else { 
             ledVal = 0.87;
         }
+*/
+        red();
+    }
+
+    public void red() {
+        ledVal = 0.61;
+    }
+
+    public void blue() {
+        ledVal = 0.61;
     }
 }

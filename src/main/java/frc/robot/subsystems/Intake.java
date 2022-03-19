@@ -40,6 +40,9 @@ public class Intake {
     private double rollerSpeed = 0.75;
     private double conveyorSpeed = 0.35;
 
+    private boolean hasCounted = false;
+    private int counter = 0;
+
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
         // Check input from left trigger
@@ -56,7 +59,24 @@ public class Intake {
             runConvInverted();
         }
         else {
+            hasCounted = false;
             stop();
+        }
+
+        // Check how many balls are counted
+        if (counter == 1) {
+            robot.setLED(0.69);
+        }
+        else if (counter == 2) {
+            robot.setLED(0.91);
+        }
+        else if (counter == 3) {
+
+            // Stop int from wrapping over 2
+            counter = 0;
+        }
+        else {
+            robot.resetLED();
         }
     }
 
@@ -84,9 +104,17 @@ public class Intake {
          * 1 - Cargo
         */
 
+        if (cargoInIntake) {
+            if (!hasCounted) {
+                hasCounted = true;
+                counter++;
+            }
+        }
+
         // Case [0, 0]
         if (!cargoInIntake && !cargoInConveyor) {
             conveyorMotor.set(conveyorSpeed);
+            counter = 0;
         }
         // Case [1, 0]
         else if (!cargoInIntake && cargoInConveyor) {
