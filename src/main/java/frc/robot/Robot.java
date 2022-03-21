@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.*;
@@ -27,6 +28,14 @@ public class Robot extends TimedRobot {
     char auton;
     double gyroRotation;
     double t;
+
+    public Robot robot = null;
+
+    public Robot() {
+        robot = this;
+    }
+
+    Spark LED = new Spark(0);
 
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -80,7 +89,7 @@ public class Robot extends TimedRobot {
             update.h, update.x, update.sx, update.y, update.sy)); */
 
             // Keep heading calibrated
-            _navpod.setAutoUpdate(0.10, update -> gyroRotation = update.h);
+            _navpod.setAutoUpdate(0.01, update -> gyroRotation = update.h);
         }
 
         // Initialize subsystems that need to be updated before autonomous/operator control
@@ -239,6 +248,10 @@ public class Robot extends TimedRobot {
         _lifter.teleopPeriodic();
         _intake.teleopPeriodic();
         _shooter.teleopPeriodic();
+    }
+
+    public void setLED(double value) {
+        LED.set(value);
     }
 
     /** This function reverts motor speeds without error */

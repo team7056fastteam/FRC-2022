@@ -26,7 +26,7 @@ import static frc.robot.Constants.*;
 public class Drivetrain {
 
   NavPod _navpod;
-  Robot _robot = new Robot();
+  Robot _robot;
 
   private static final double MAX_VOLTAGE = 15.0;
   public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.14528;
@@ -45,9 +45,10 @@ public class Drivetrain {
             new Translation2d(-Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0)
   );
   
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, _robot.getGyroscopeRotation2d());
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, _robot.robot.getGyroscopeRotation2d());
 
   public Drivetrain() {
+    
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     frontLeftModule = Mk3SwerveModuleHelper.createNeo(
@@ -95,7 +96,7 @@ public class Drivetrain {
             BACK_RIGHT_MODULE_STEER_OFFSET
     );
 
-    tab.addNumber("Gyroscope Angle", () -> _robot.getGyroscopeRotation());
+    tab.addNumber("Gyroscope Angle", () -> _robot.robot.getGyroscopeRotation());
     tab.addNumber("Pose X", () -> odometry.getPoseMeters().getX());
     tab.addNumber("Pose Y", () -> odometry.getPoseMeters().getY());
   }
@@ -103,7 +104,7 @@ public class Drivetrain {
   public void zeroGyroscope() {
         odometry.resetPosition(
                 new Pose2d(odometry.getPoseMeters().getTranslation(), Rotation2d.fromDegrees(0.0)),
-                Rotation2d.fromDegrees(_robot.getGyroscopeRotation())
+                Rotation2d.fromDegrees(_robot.robot.getGyroscopeRotation())
         );
   }
 
