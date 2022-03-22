@@ -194,7 +194,38 @@ public class Robot extends TimedRobot {
     }
 
     public void autonB() {
-
+        if (t > 0 && t < 2) {
+            _drive.drive(new ChassisSpeeds(
+                modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            ));
+            _intake.runConv();
+            _intake.runRollerAuton();
+        }
+        else if (t > 2 && t < 3.5) {
+            _drive.drive(new ChassisSpeeds(
+                -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            ));
+            _intake.runConv();
+            _intake.runRollerAuton();
+        }
+        else if (t > 3.5 && t < 4) {
+            stop();
+            _intake.stop();
+        }
+        else if (t > 4 && t < 6.5) {
+            _shooter.forceRunShooter();
+            _intake.forceRunConv();
+            stop();
+        }
+        else {
+            stop();
+            _intake.stop();
+            _shooter.stop();
+        }
     }
 
     /** This function is run once each time the robot enters operator control. */
