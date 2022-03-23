@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Limelight {
 
@@ -24,7 +25,7 @@ public class Limelight {
         tv = table.getEntry("tv");
     }
 
-    public void robotInit() {
+    public void robotInit(Robot robot) {
         setLED(false);
         steer = 0.0;
     }

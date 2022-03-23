@@ -58,6 +58,9 @@ public final class NeoDriveControllerFactoryBuilder {
             // **This will override the SparkMAX settings on each motor controller**
             motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
+            // Save changes to the motor
+            motor.burnFlash();
+
             // Setup encoder
             RelativeEncoder encoder = motor.getEncoder();
             double positionConversionFactor = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction();

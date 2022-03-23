@@ -71,6 +71,7 @@ public final class NeoSteerControllerFactoryBuilder {
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
             checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
+            
             motor.setInverted(!moduleConfiguration.isSteerInverted());
             if (hasVoltageCompensation()) {
                 checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
@@ -91,6 +92,9 @@ public final class NeoSteerControllerFactoryBuilder {
                 checkNeoError(controller.setD(pidDerivative), "Failed to set NEO PID derivative constant");
             }
             checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set NEO PID feedback device");
+
+            // Save changes to the motor
+            motor.burnFlash();
 
             return new ControllerImplementation(motor, absoluteEncoder);
         }

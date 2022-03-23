@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
             _navpod.setAutoUpdate(0.02, update -> gyroRotation = update.h);
         }
 
-        _limelight.robotInit();
+        _limelight.robotInit(this);
     }
 
     private static double deadband(double value, double deadband) {
