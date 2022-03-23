@@ -19,14 +19,13 @@ public class Robot extends TimedRobot {
     Shooter _shooter;
     Limelight _limelight;
     NavPod _navpod;
-    Constants constants = new Constants();
+    
+    char auton = 'a';
+    double gyroRotation = 0;
+    double t = 0;
 
     private final Timer timer = new Timer();
-    
-    // Static variables
-    char auton;
-    double gyroRotation;
-    double t;
+    private final Constants constants = new Constants();
 
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -39,14 +38,10 @@ public class Robot extends TimedRobot {
         _intake = new Intake(this);
         _lifter = new Lifter(this);
         _shooter = new Shooter(this);
-
-        _limelight = new Limelight();
-        _navpod = new NavPod();
-
-        // Reset instance variables
-        auton = 'a';
-        gyroRotation = 0.0;
-        t = 0.0;
+        _limelight = new Limelight(this);
+        _navpod = new NavPod(this);
+        
+        _limelight.robotInit();
 
         // Check if the NavPod is connected to RoboRIO
         if (_navpod.isValid())
@@ -79,8 +74,6 @@ public class Robot extends TimedRobot {
             // Keep heading calibrated
             _navpod.setAutoUpdate(0.02, update -> gyroRotation = update.h);
         }
-
-        _limelight.robotInit(this);
     }
 
     private static double deadband(double value, double deadband) {
@@ -215,39 +208,23 @@ public class Robot extends TimedRobot {
         }
     }
 
-    /** This function is run once each time the robot enters operator control. */
-    @Override
-    public void teleopInit() {
-    }
-
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
         // Check for driver RT held/pressed
         double xT = 1.0;
-        if (constants.driverRB()) {
-            xT = 0.65;
-        }
+        if (constants.driverRB()) { xT = 0.65; }
 
         // Check for driver RB pressed
-        // Zero the gyroscope while driving
         if (constants.driverRT() > 0.1) {
+
+            // Zero the NavPod gyroscope
             setGyroscopeHeading(0);
         }
 
         double xPercent = -modifyAxis((constants.driverRY() * 0.75) * xT);
         double yPercent = -modifyAxis((constants.driverRX() * 0.75) * xT);
         double zPercent = -modifyAxis((constants.driverLX() * 0.65) * xT);
-        
-        // Field Oriented Drive
-        /*
-        _drive.drive(
-                  ChassisSpeeds.fromFieldRelativeSpeeds(
-                          xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                          yPercWWWent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                          zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-                          _drive.getRotation()));
-        */
 
         // Robot Oriented Drive
         _drive.drive(
@@ -260,6 +237,16 @@ public class Robot extends TimedRobot {
         if (constants.driverLB()) {
             _drive.lock();
         }
+
+        // Field Oriented Drive
+        /*
+        _drive.drive(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                          xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                          yPercWWWent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                          zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+                          _drive.getRotation()));
+        */
 
         // Send commands to other classes
         _limelight.teleopPeriodic();

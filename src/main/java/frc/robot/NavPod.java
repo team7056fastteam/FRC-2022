@@ -54,7 +54,7 @@ public class NavPod extends Thread
 	private int				            _version = 0;
     private Consumer<NavPodUpdate>      _callback = null;
 
-    public NavPod()
+    public NavPod(Robot robot)
     {
         super();
 

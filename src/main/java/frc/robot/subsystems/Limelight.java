@@ -19,13 +19,13 @@ public class Limelight {
     NetworkTableEntry tv;
     double steer;
 
-    public Limelight() {
+    public Limelight(Robot robot) {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         tx = table.getEntry("tx");
         tv = table.getEntry("tv");
     }
 
-    public void robotInit(Robot robot) {
+    public void robotInit() {
         setLED(false);
         steer = 0.0;
     }
