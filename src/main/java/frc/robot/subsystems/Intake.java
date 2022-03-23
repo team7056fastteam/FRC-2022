@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -16,6 +17,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Intake {
 
     private final Robot robot;
+
+    Spark LED = new Spark(0);
     private final Constants constants = new Constants();
 
     private final CANSparkMax rollerMotor;
@@ -66,10 +69,10 @@ public class Intake {
 
         // Check how many balls are counted
         if (counter == 1) {
-            robot.setLED(0.69);
+            LED.set(0.69);
         }
         else if (counter == 2) {
-            robot.setLED(0.93);
+            LED.set(0.93);
         }
         else if (counter == 3) {
 
@@ -77,7 +80,7 @@ public class Intake {
             counter = 0;
         }
         else {
-            robot.setLED(.91);
+            LED.set(.91);
         }
     }
 
@@ -142,5 +145,13 @@ public class Intake {
     public void stop() {
         conveyorMotor.set(0);
         rollerMotor.set(0);
+    }
+
+    public void setParty() {
+        LED.set(-.97);
+    }
+
+    public void endParty() {
+        LED.set(.91);
     }
 }

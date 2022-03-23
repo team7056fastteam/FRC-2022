@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.*;
@@ -28,14 +27,6 @@ public class Robot extends TimedRobot {
     char auton;
     double gyroRotation;
     double t;
-
-    public Robot robot = null;
-
-    public Robot() {
-        robot = this;
-    }
-
-    Spark LED = new Spark(0);
 
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -89,7 +80,7 @@ public class Robot extends TimedRobot {
             update.h, update.x, update.sx, update.y, update.sy)); */
 
             // Keep heading calibrated
-            _navpod.setAutoUpdate(0.01, update -> gyroRotation = update.h);
+            _navpod.setAutoUpdate(0.10, update -> gyroRotation = update.h);
         }
 
         // Initialize subsystems that need to be updated before autonomous/operator control
@@ -194,38 +185,7 @@ public class Robot extends TimedRobot {
     }
 
     public void autonB() {
-        if (t > 0 && t < 2) {
-            _drive.drive(new ChassisSpeeds(
-                modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            ));
-            _intake.runConv();
-            _intake.runRollerAuton();
-        }
-        else if (t > 2 && t < 3.5) {
-            _drive.drive(new ChassisSpeeds(
-                -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            ));
-            _intake.runConv();
-            _intake.runRollerAuton();
-        }
-        else if (t > 3.5 && t < 4) {
-            stop();
-            _intake.stop();
-        }
-        else if (t > 4 && t < 6.5) {
-            _shooter.forceRunShooter();
-            _intake.forceRunConv();
-            stop();
-        }
-        else {
-            stop();
-            _intake.stop();
-            _shooter.stop();
-        }
+
     }
 
     /** This function is run once each time the robot enters operator control. */
@@ -279,10 +239,6 @@ public class Robot extends TimedRobot {
         _lifter.teleopPeriodic();
         _intake.teleopPeriodic();
         _shooter.teleopPeriodic();
-    }
-
-    public void setLED(double value) {
-        LED.set(value);
     }
 
     /** This function reverts motor speeds without error */

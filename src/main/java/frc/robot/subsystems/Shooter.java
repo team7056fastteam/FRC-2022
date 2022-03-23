@@ -50,11 +50,6 @@ public class Shooter {
         }
     }
 
-    public void forceRunShooter() {
-        leftShooterMotor.set(.65);
-        rightShooterMotor.set(-.65);
-    }
-
     public void runShooter() {
         rightShooterMotor.set(speed);
         leftShooterMotor.set(robot.invert(speed));
