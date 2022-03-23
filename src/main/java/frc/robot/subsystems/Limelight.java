@@ -8,7 +8,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
-import frc.robot.Robot;
 
 public class Limelight {
 
@@ -19,14 +18,10 @@ public class Limelight {
     NetworkTableEntry tv;
     double steer;
 
-    Robot robot;
-
     public Limelight() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         tx = table.getEntry("tx");
         tv = table.getEntry("tv");
-
-        robot = new Robot();
     }
 
     public void robotInit() {

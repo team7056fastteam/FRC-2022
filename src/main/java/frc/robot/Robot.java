@@ -35,12 +35,13 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Initialize robot subsystems
-        _drive = new Drivetrain();
-        _navpod = new NavPod();
-        _intake = new Intake();
-        _lifter = new Lifter();
-        _shooter = new Shooter();
+        _drive = new Drivetrain(this);
+        _intake = new Intake(this);
+        _lifter = new Lifter(this);
+        _shooter = new Shooter(this);
+
         _limelight = new Limelight();
+        _navpod = new NavPod();
 
         // Reset instance variables
         auton = 'a';
@@ -52,7 +53,7 @@ public class Robot extends TimedRobot {
         {
             NavPodConfig config = new NavPodConfig();
             config.cableMountAngle = 0;
-            config.fieldOrientedEnabled = false;
+            config.fieldOrientedEnabled = true;
             config.initialHeadingAngle = 90;
             config.mountOffsetX = 0;
             config.mountOffsetY = 0;
@@ -75,15 +76,10 @@ public class Robot extends TimedRobot {
             setGyroscopeHeading(0);
             setDefaultPosition(0, 0);
 
-            // Update console with NavPod info every 10ms
-            /* _navpod.setAutoUpdate(0.15, update -> System.err.printf("h: %f, x: %f, sx: %f, y: %f, ys: %f\n",
-            update.h, update.x, update.sx, update.y, update.sy)); */
-
             // Keep heading calibrated
-            _navpod.setAutoUpdate(0.10, update -> gyroRotation = update.h);
+            _navpod.setAutoUpdate(0.02, update -> gyroRotation = update.h);
         }
 
-        // Initialize subsystems that need to be updated before autonomous/operator control
         _limelight.robotInit();
     }
 
@@ -185,7 +181,38 @@ public class Robot extends TimedRobot {
     }
 
     public void autonB() {
-
+        if (t > 0 && t < 2) {
+            _drive.drive(new ChassisSpeeds(
+                modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            ));
+            _intake.runConv();
+            _intake.runRollerAuton();
+        }
+        else if (t > 2 && t < 3.5) {
+            _drive.drive(new ChassisSpeeds(
+                -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
+                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            ));
+            _intake.runConv();
+            _intake.runRollerAuton();
+        }
+        else if (t > 3.5 && t < 4) {
+            stop();
+            _intake.stop();
+        }
+        else if (t > 4 && t < 6.5) {
+            _shooter.forceRunShooter();
+            _intake.forceRunConv();
+            stop();
+        }
+        else {
+            stop();
+            _intake.stop();
+            _shooter.stop();
+        }
     }
 
     /** This function is run once each time the robot enters operator control. */

@@ -16,14 +16,14 @@ import edu.wpi.first.wpilibj.Joystick;
 public class Lifter {
 
     Constants constants = new Constants();
-    Robot robot;
+    private static Robot robot;
 
     private final CANSparkMax leftLiftMotor;
     private final CANSparkMax rightLiftMotor;
 
-    public Lifter()
+    public Lifter(Robot robot)
     {
-        robot = new Robot();
+        this.robot = robot;
         leftLiftMotor = new CANSparkMax(LIFT_LEFT_MOTOR, MotorType.kBrushless);
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
     }

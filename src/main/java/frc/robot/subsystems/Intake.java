@@ -27,8 +27,8 @@ public class Intake {
     private final DigitalInput intakeSwitch;
     private final DigitalInput conveyorSwitch;
 
-    public Intake() {
-        robot = new Robot();
+    public Intake(Robot robot) {
+        this.robot = robot;
 
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);
         conveyorMotor = new CANSparkMax(INTAKE_CONVEYOR_MOTOR, MotorType.kBrushless);
