@@ -41,17 +41,12 @@ public class Intake {
     private double rollerSpeed = 0.75;
     private double conveyorSpeed = 0.35;
 
-    private boolean hasCounted = false;
-    private int counter = 0;
-
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
-        
-        System.out.println(counter);
 
         // Check input from left trigger
         if (constants.operatorLT() > 0.2) {
-            runRoller();
+            runRoller(0);
             runConv();
         }
         // Check input for A button
@@ -63,75 +58,41 @@ public class Intake {
             runConvInverted();
         }
         else {
-            hasCounted = false;
             stop();
-        }
-
-        // Check how many balls are counted
-        if (counter == 1) {
-            LED.set(0.69);
-        }
-        else if (counter == 2) {
-            LED.set(0.93);
-        }
-        else if (counter == 3) {
-
-            // Stop int from wrapping over 2
-            counter = 0;
-        }
-        else {
-            LED.set(.91);
         }
     }
 
     /** Command functions */
 
-    public void runRoller() {
+    public void runRoller(int direction) {
         rollerMotor.set(rollerSpeed);
-    }
-
-    public void runRollerAuton() {
-        rollerMotor.set(0.8);
     }
 
     public void forceRunConv() {
         conveyorMotor.set(conveyorSpeed);
     }
 
+    public void forceRunRoller() {
+        rollerMotor.set(0.8);
+    }
+
     public void runConv() {
-        boolean cargoInIntake = (intakeSwitch.get());
-        boolean cargoInConveyor = (conveyorSwitch.get());
+        boolean cargoInIntake = intakeSwitch.get();
+        boolean cargoInConveyor = conveyorSwitch.get();
 
-        /** 
-         * [Intake switch, Conveyor switch]
-         * 0 - No cargo
-         * 1 - Cargo
-        */
-
-        // Case [0, 0]
+        // Cargo at intake, Cargo at conveyor
         if (!cargoInIntake && !cargoInConveyor) {
             conveyorMotor.set(conveyorSpeed);
-            if (counter == 2) {
-                counter = 0;
-            }
         }
-        // Case [1, 0]
+        // Only cargo at intake;
         else if (!cargoInIntake && cargoInConveyor) {
             conveyorMotor.set(conveyorSpeed);
-            if (counter == 1) {
-                counter++;
-                hasCounted = true;
-            }
         }
-        // Case [0, 1]
+        // Only cargo at conveyor
         else if (cargoInIntake && !cargoInConveyor) {
             conveyorMotor.set(0);
-            if (!hasCounted && counter == 0) {
-                hasCounted = true;
-                counter++;
-            }
         }
-        // Case [1, 1]
+        // No Cargo
         else {
             conveyorMotor.set(conveyorSpeed);
         }
@@ -145,13 +106,5 @@ public class Intake {
     public void stop() {
         conveyorMotor.set(0);
         rollerMotor.set(0);
-    }
-
-    public void setParty() {
-        LED.set(-.97);
-    }
-
-    public void endParty() {
-        LED.set(.91);
     }
 }

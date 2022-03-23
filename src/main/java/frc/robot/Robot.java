@@ -146,7 +146,7 @@ public class Robot extends TimedRobot {
                 -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
             ));
             _intake.runConv();
-            _intake.runRollerAuton();
+            _intake.forceRunRoller();
         }
         else if (t > 2 && t < 5) {
             _drive.drive(new ChassisSpeeds(
@@ -155,7 +155,7 @@ public class Robot extends TimedRobot {
                 -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
             ));
             _intake.runConv();
-            _intake.runRollerAuton();
+            _intake.forceRunRoller();
         }
         else if (t > 5 && t < 5.5) {
             stop();
@@ -181,7 +181,7 @@ public class Robot extends TimedRobot {
                 -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
             ));
             _intake.runConv();
-            _intake.runRollerAuton();
+            _intake.forceRunRoller();
         }
         else if (t > 2 && t < 3.5) {
             _drive.drive(new ChassisSpeeds(
@@ -190,7 +190,7 @@ public class Robot extends TimedRobot {
                 -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
             ));
             _intake.runConv();
-            _intake.runRollerAuton();
+            _intake.forceRunRoller();
         }
         else if (t > 3.5 && t < 4) {
             stop();
