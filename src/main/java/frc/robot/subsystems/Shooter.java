@@ -30,8 +30,6 @@ public class Shooter {
     /** Configuration */
     double speed = .25;
     int index = 0;
-    boolean hasInc = false;
-    boolean hasDec = false;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
