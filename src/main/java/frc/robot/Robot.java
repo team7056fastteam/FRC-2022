@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.*;
@@ -25,6 +26,7 @@ public class Robot extends TimedRobot {
     double t = 0;
 
     private final Timer timer = new Timer();
+    XboxController driver = new XboxController(0);
     private final Constants constants = new Constants();
 
     /**
@@ -33,15 +35,7 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void robotInit() {
-        // Initialize robot subsystems
-        _drive = new Drivetrain(this);
-        _intake = new Intake(this);
-        _lifter = new Lifter(this);
-        _shooter = new Shooter(this);
-        _limelight = new Limelight(this);
         _navpod = new NavPod(this);
-        
-        _limelight.robotInit();
 
         // Check if the NavPod is connected to RoboRIO
         if (_navpod.isValid())
@@ -74,6 +68,16 @@ public class Robot extends TimedRobot {
             // Keep heading calibrated
             _navpod.setAutoUpdate(0.02, update -> gyroRotation = update.h);
         }
+        
+        // Initialize robot subsystems
+        _drive = new Drivetrain();
+        _intake = new Intake(this);
+        _lifter = new Lifter(this);
+        _shooter = new Shooter(this);
+        _limelight = new Limelight(this);
+
+        _limelight.robotInit();
+        // _drive.setDegrees(gyroRotation);
     }
 
     private static double deadband(double value, double deadband) {
@@ -108,6 +112,8 @@ public class Robot extends TimedRobot {
             auton = 'b';
             System.out.println("Red/Blue High Goal");
         }
+
+        //_drive.setDegrees(gyroRotation);
     }
 
     /** This function is run once each time the robot enters autonomous mode. */
@@ -213,18 +219,18 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         // Check for driver RT held/pressed
         double xT = 1.0;
-        if (constants.driverRB()) { xT = 0.65; }
+        if (driver.getRightBumper()) { xT = 0.65; }
 
-        // Check for driver RB pressed
-        if (constants.driverRT() > 0.1) {
+        // Check for drsiver RB pressed
+        if (driver.getRightTriggerAxis() > 0.1) {
 
             // Zero the NavPod gyroscope
             setGyroscopeHeading(0);
         }
 
-        double xPercent = -modifyAxis((constants.driverRY() * 0.75) * xT);
-        double yPercent = -modifyAxis((constants.driverRX() * 0.75) * xT);
-        double zPercent = -modifyAxis((constants.driverLX() * 0.65) * xT);
+        double xPercent = -modifyAxis((driver.getRightY() * 0.65) * xT);
+        double yPercent = -modifyAxis((driver.getRightX() * 0.65) * xT);
+        double zPercent = -modifyAxis((driver.getLeftX() * 0.65) * xT);
 
         // Robot Oriented Drive
         _drive.drive(

@@ -39,7 +39,7 @@ public class Intake {
      
     /** Configuration */
     private double rollerSpeed = 0.75;
-    private double conveyorSpeed = 0.35;
+    private double conveyorSpeed = 0.45;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
