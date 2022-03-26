@@ -42,7 +42,7 @@ public class Shooter {
         }
 
         if (constants.operatorRB()) {
-            speed = .65;
+            speed = .70;
         }
         else {
             speed = .25;
@@ -50,13 +50,13 @@ public class Shooter {
     }
 
     public void runShooter() {
-        rightShooterMotor.set(speed);
         leftShooterMotor.set(robot.invert(speed));
+        rightShooterMotor.set(speed);
     }
 
     public void forceRunShooter() {
-        leftShooterMotor.set(.65);
-        rightShooterMotor.set(-.65);
+        leftShooterMotor.set(-.70);
+        rightShooterMotor.set(.70);
     }
 
     public void stop() {

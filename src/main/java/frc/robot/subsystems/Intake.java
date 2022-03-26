@@ -35,6 +35,8 @@ public class Intake {
 
         intakeSwitch = new DigitalInput(INTAKE_LIMIT_SWITCH);
         conveyorSwitch = new DigitalInput(CONVEYOR_LIMIT_SWITCH);
+
+        conveyorMotor.burnFlash();
     }
      
     /** Configuration */

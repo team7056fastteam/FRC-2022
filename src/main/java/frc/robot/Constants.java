@@ -59,7 +59,7 @@ public final class Constants {
     
     // Limit Switches
     public static final int INTAKE_LIMIT_SWITCH = 0;
-    public static final int CONVEYOR_LIMIT_SWITCH = 1;
+    public static final int CONVEYOR_LIMIT_SWITCH = 3;
 
     // LED Control
     public static final int LED_CHANNEL = 0;
