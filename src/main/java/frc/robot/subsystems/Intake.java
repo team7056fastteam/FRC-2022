@@ -16,7 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Intake {
 
-    private final Robot robot;
+    private Robot robot;
 
     Spark LED = new Spark(0);
     private final Constants constants = new Constants();
@@ -27,8 +27,8 @@ public class Intake {
     private final DigitalInput intakeSwitch;
     private final DigitalInput conveyorSwitch;
 
-    public Intake(Robot robot) {
-        this.robot = robot;
+    public Intake(Robot _robot) {
+        robot = _robot;
 
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);
         conveyorMotor = new CANSparkMax(INTAKE_CONVEYOR_MOTOR, MotorType.kBrushless);
@@ -38,7 +38,7 @@ public class Intake {
 
         conveyorMotor.burnFlash();
     }
-     
+
     /** Configuration */
     private double rollerSpeed = 0.75;
     private double conveyorSpeed = 0.45;
@@ -56,10 +56,9 @@ public class Intake {
             forceRunConv();
         }
         // Check input for B button
-        else if (constants.operatorB()) { 
+        else if (constants.operatorB()) {
             runConvInverted();
-        }
-        else {
+        } else {
             stop();
         }
     }

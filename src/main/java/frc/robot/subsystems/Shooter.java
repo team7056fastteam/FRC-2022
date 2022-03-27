@@ -12,7 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Shooter {
 
-    private final Robot robot;
+    private Robot _robot;
 
     Constants constants = new Constants();
     double currentTime;
@@ -22,7 +22,7 @@ public class Shooter {
 
     public Shooter(Robot robot)
     {
-        this.robot = robot;
+        _robot = robot;
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
     }
@@ -50,7 +50,7 @@ public class Shooter {
     }
 
     public void runShooter() {
-        leftShooterMotor.set(robot.invert(speed));
+        leftShooterMotor.set(_robot.invert(speed));
         rightShooterMotor.set(speed);
     }
 

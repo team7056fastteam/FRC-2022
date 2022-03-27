@@ -70,14 +70,13 @@ public class Robot extends TimedRobot {
         }
         
         // Initialize robot subsystems
-        _drive = new Drivetrain();
+        _drive = new Drivetrain(this);
         _intake = new Intake(this);
         _lifter = new Lifter(this);
         _shooter = new Shooter(this);
         _limelight = new Limelight(this);
 
         _limelight.robotInit();
-        // _drive.setDegrees(gyroRotation);
     }
 
     private static double deadband(double value, double deadband) {
