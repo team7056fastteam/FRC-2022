@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.*;
+import frc.robot.utils.Utilities;
 
 public class Robot extends TimedRobot {
 
@@ -79,20 +80,8 @@ public class Robot extends TimedRobot {
         _limelight.robotInit();
     }
 
-    private static double deadband(double value, double deadband) {
-        if (Math.abs(value) > deadband) {
-            if (value > 0.0) {
-                return (value - deadband) / (1.0 - deadband);
-            } else {
-                return (value + deadband) / (1.0 - deadband);
-            }
-        } else {
-            return 0.0;
-        }
-    }
-
-    private static double modifyAxis(double value) {
-        return deadband(Math.copySign(value * value, value), 0.1);
+    private double modifyAxis(double value) {
+        return Utilities.deadband(Math.copySign(value * value, value), 0.05);
     }
 
     /**

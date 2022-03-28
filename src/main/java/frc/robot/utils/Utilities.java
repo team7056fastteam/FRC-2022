@@ -16,4 +16,13 @@ public class Utilities {
         tab.addNumber("[" + name + "] Applied Output", () -> motor.getAppliedOutput());
         tab.addNumber("[" + name + "] Output Current", () -> motor.getOutputCurrent());
     }
+
+    public static double deadband(double input) {
+		return deadband(input, 0.025);
+	}
+
+    public static double deadband(double input, double buffer) {
+		if (Math.abs(input) < buffer) return 0;
+		return input;
+	}
 }
