@@ -4,17 +4,16 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
 import frc.robot.Robot;
-import static frc.robot.Constants.*;
+import static frc.robot.utils.Constants.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class Shooter {
-
     private Robot _robot;
 
-    Constants constants = new Constants();
+    XboxController operator = new XboxController(1);
     double currentTime;
 
     private final CANSparkMax leftShooterMotor;
@@ -28,35 +27,44 @@ public class Shooter {
     }
 
     /** Configuration */
-    double speed = .25;
-    int index = 0;
+    double lowSpeed = .25;
+    double highSpeed = .70;
+    boolean mode = false;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
         // Check input from right trigger
-        if (constants.operatorRT() > 0.2) {
+        if (operator.getRightTriggerAxis() > 0.2) {
             runShooter();
         }
         else {
             stop();
         }
 
-        if (constants.operatorRB()) {
-            speed = .70;
+        if (operator.getRightBumper()) {
+            mode = true;
         }
         else {
-            speed = .25;
+            mode = false;
         }
     }
 
     public void runShooter() {
-        leftShooterMotor.set(_robot.invert(speed));
-        rightShooterMotor.set(speed);
+        if (mode) {
+            // Run shooter at high speed
+            leftShooterMotor.set(_robot.invert(highSpeed));
+            rightShooterMotor.set(highSpeed);
+        }
+        else {
+            // Run shooter at low speed
+            leftShooterMotor.set(_robot.invert(lowSpeed));
+            rightShooterMotor.set(lowSpeed);
+        }
     }
 
     public void forceRunShooter() {
-        leftShooterMotor.set(-.70);
-        rightShooterMotor.set(.70);
+        leftShooterMotor.set(_robot.invert(highSpeed));
+        rightShooterMotor.set(highSpeed);
     }
 
     public void stop() {

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static frc.robot.utils.Constants.*;
+
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
@@ -17,10 +19,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.Constants;
 import frc.robot.Robot;
-
-import static frc.robot.Constants.*;
+import frc.robot.utils.Constants;
 
 public class Drivetrain {
 

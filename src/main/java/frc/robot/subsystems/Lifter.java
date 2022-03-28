@@ -4,49 +4,56 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
 import frc.robot.Robot;
 
-import static frc.robot.Constants.*;
+import static frc.robot.utils.Constants.*;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class Lifter {
-
-    Constants constants = new Constants();
+    private Robot _robot;
 
     private final CANSparkMax leftLiftMotor;
     private final CANSparkMax rightLiftMotor;
+    
+    XboxController operator = new XboxController(1);
 
     public Lifter(Robot robot)
     {
+        _robot = robot;
+
         leftLiftMotor = new CANSparkMax(LIFT_LEFT_MOTOR, MotorType.kBrushless);
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
+        leftLiftMotor.burnFlash();
+        rightLiftMotor.burnFlash();
     }
-    
-    private final Joystick operator = new Joystick(1);
+
+    // Configuration
+    double liftSpeed = 0.5;
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
 
         if (operator.getRawButton(3)) {
-            leftLiftMotor.set(-0.5);
-            rightLiftMotor.set(-0.5);
+            leftLiftMotor.set(_robot.invert(liftSpeed));
+            rightLiftMotor.set(_robot.invert(liftSpeed));
         }
         else if (operator.getRawButton(4)) {
-            leftLiftMotor.set(0.5);
-            rightLiftMotor.set(0.5);
+            leftLiftMotor.set(liftSpeed);
+            rightLiftMotor.set(liftSpeed);
         }
         else {
             leftLiftMotor.set(0.0);
             rightLiftMotor.set(0.0);
         }
 
-        if (constants.operatorRY() > 0.1 || constants.operatorRY() < -0.1) {
-            leftLiftMotor.set(constants.operatorRY() * .75);
-            rightLiftMotor.set(constants.operatorRY() * .75);
+        // Conveyor override controls
+        if (operator.getRightY() > 0.1 || operator.getRightY() < -0.1) {
+            leftLiftMotor.set(operator.getRightY() * .75);
+            rightLiftMotor.set(operator.getRightY() * .75);
         }
     }
 }

@@ -20,26 +20,26 @@ public class Robot extends TimedRobot {
     Shooter _shooter;
     Limelight _limelight;
     NavPod _navpod;
-    
+
     char auton = 'a';
     double gyroRotation = 0;
     double t = 0;
 
     private final Timer timer = new Timer();
     XboxController driver = new XboxController(0);
-    private final Constants constants = new Constants();
+    XboxController operator = new XboxController(1);
 
     /**
-    * This function is run when the robot is first started up and should be used for any
-    * initialization code.
-    */
+     * This function is run when the robot is first started up and should be used
+     * for any
+     * initialization code.
+     */
     @Override
     public void robotInit() {
         _navpod = new NavPod(this);
 
         // Check if the NavPod is connected to RoboRIO
-        if (_navpod.isValid())
-        {
+        if (_navpod.isValid()) {
             NavPodConfig config = new NavPodConfig();
             config.cableMountAngle = 0;
             config.fieldOrientedEnabled = true;
@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
             // Keep heading calibrated
             _navpod.setAutoUpdate(0.02, update -> gyroRotation = update.h);
         }
-        
+
         // Initialize robot subsystems
         _drive = new Drivetrain(this);
         _intake = new Intake(this);
@@ -90,29 +90,27 @@ public class Robot extends TimedRobot {
             return 0.0;
         }
     }
-    
+
     private static double modifyAxis(double value) {
         return deadband(Math.copySign(value * value, value), 0.1);
     }
-    
+
     /**
-    * This function is called every robot packet, no matter the mode. Use this for items like
-    * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-    */
+     * This function is called every robot packet, no matter the mode. Use this for
+     * items like
+     * diagnostics that you want ran during disabled, autonomous, teleoperated and
+     * test.
+     */
     @Override
     public void robotPeriodic() {
-
         // Allow autonomous selection
-        if (constants.operatorA()) {
+        if (operator.getAButton()) {
             auton = 'a';
             System.out.println("Red/Blue Lower Goal");
-        }
-        else if (constants.operatorB()) {
+        } else if (operator.getBButton()) {
             auton = 'b';
             System.out.println("Red/Blue High Goal");
         }
-
-        //_drive.setDegrees(gyroRotation);
     }
 
     /** This function is run once each time the robot enters autonomous mode. */
@@ -122,7 +120,7 @@ public class Robot extends TimedRobot {
         timer.reset();
         timer.start();
         t = 0;
-        
+
         stop();
     }
 
@@ -133,11 +131,9 @@ public class Robot extends TimedRobot {
 
         if (auton == 'a') {
             autonA();
-        }
-        else if (auton == 'b') {
+        } else if (auton == 'b') {
             autonB();
-        }
-        else {
+        } else {
             // Default to auton mode A at startup
             auton = 'a';
         }
@@ -146,32 +142,26 @@ public class Robot extends TimedRobot {
     public void autonA() {
         if (t > 0 && t < 2) {
             _drive.drive(new ChassisSpeeds(
-                modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            ));
+                    modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
-        }
-        else if (t > 2 && t < 5) {
+        } else if (t > 2 && t < 5) {
             _drive.drive(new ChassisSpeeds(
-                -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            ));
+                    -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
-        }
-        else if (t > 5 && t < 5.5) {
+        } else if (t > 5 && t < 5.5) {
             stop();
             _intake.stop();
-        }
-        else if (t > 5.5 && t < 7) {
+        } else if (t > 5.5 && t < 7) {
             _shooter.runShooter();
             _intake.forceRunConv();
             stop();
-        }
-        else {
+        } else {
             stop();
             _intake.stop();
             _shooter.stop();
@@ -181,32 +171,26 @@ public class Robot extends TimedRobot {
     public void autonB() {
         if (t > 0 && t < 2) {
             _drive.drive(new ChassisSpeeds(
-                modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            ));
+                    modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
-        }
-        else if (t > 2 && t < 3.5) {
+        } else if (t > 2 && t < 3.5) {
             _drive.drive(new ChassisSpeeds(
-                -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            ));
+                    -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
-        }
-        else if (t > 3.5 && t < 4) {
+        } else if (t > 3.5 && t < 4) {
             stop();
             _intake.stop();
-        }
-        else if (t > 4 && t < 6.5) {
+        } else if (t > 4 && t < 6.5) {
             _shooter.forceRunShooter();
             _intake.forceRunConv();
             stop();
-        }
-        else {
+        } else {
             stop();
             _intake.stop();
             _shooter.stop();
@@ -218,7 +202,9 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         // Check for driver RT held/pressed
         double xT = 1.0;
-        if (driver.getRightBumper()) { xT = 0.65; }
+        if (driver.getRightBumper()) {
+            xT = 0.65;
+        }
 
         // Check for drsiver RB pressed
         if (driver.getRightTriggerAxis() > 0.1) {
@@ -233,25 +219,24 @@ public class Robot extends TimedRobot {
 
         // Robot Oriented Drive
         _drive.drive(
-            new ChassisSpeeds(
-                xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            ));
+                new ChassisSpeeds(
+                        xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                        yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                        zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
-        if (constants.driverLB()) {
+        if (driver.getLeftBumper()) {
             _drive.lock();
         }
 
         // Field Oriented Drive
         /*
-        _drive.drive(
-                  ChassisSpeeds.fromFieldRelativeSpeeds(
-                          xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                          yPercWWWent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, 
-                          zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-                          _drive.getRotation()));
-        */
+         * _drive.drive(
+         * ChassisSpeeds.fromFieldRelativeSpeeds(
+         * xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+         * yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+         * zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+         * _drive.getRotation()));
+         */
 
         // Send commands to other classes
         _limelight.teleopPeriodic();
@@ -261,19 +246,29 @@ public class Robot extends TimedRobot {
     }
 
     /** This function reverts motor speeds without error */
-    public double invert(double value) { return (value * (-1)); }
+    public double invert(double value) {
+        return (value * (-1));
+    }
 
     /** This function returns the Rotation2d calculated gyro heading */
-    public Rotation2d getGyroscopeRotation2d() { return Rotation2d.fromDegrees(gyroRotation); }
+    public Rotation2d getGyroscopeRotation2d() {
+        return Rotation2d.fromDegrees(gyroRotation);
+    }
 
     /** This function returns the degrees gyro heading */
-    public double getGyroscopeRotation() { return gyroRotation; }
+    public double getGyroscopeRotation() {
+        return gyroRotation;
+    }
 
     /** This function sets the gyro heading */
-    public void setGyroscopeHeading(double h) { _navpod.resetH(h); }
+    public void setGyroscopeHeading(double h) {
+        _navpod.resetH(h);
+    }
 
     /** This function sets the relative position of the NavPod */
-    public void setDefaultPosition(double x, double y) { _navpod.resetXY(x, y); }
+    public void setDefaultPosition(double x, double y) {
+        _navpod.resetXY(x, y);
+    }
 
     /** This function stops the drivetrain */
     public void stop() {

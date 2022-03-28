@@ -7,19 +7,22 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Robot;
 
 public class Limelight {
-
-    private final Constants constants = new Constants();
+    // private Robot _robot;
 
     NetworkTable table;
     NetworkTableEntry tx;
     NetworkTableEntry tv;
     double steer;
 
+    XboxController driver = new XboxController(0);
+
     public Limelight(Robot robot) {
+        // _robot = robot;
+
         table = NetworkTableInstance.getDefault().getTable("limelight");
         tx = table.getEntry("tx");
         tv = table.getEntry("tv");
@@ -35,7 +38,7 @@ public class Limelight {
         float STEER_K = 0.009f;
 
         // Check for operator LB button
-        if (constants.driverLT() > 0.1) {
+        if (driver.getLeftTriggerAxis() > 0.1) {
             setLED(true);
 
             double x = tx.getDouble(0.0);
