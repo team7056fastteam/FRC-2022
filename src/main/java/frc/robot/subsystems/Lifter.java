@@ -30,9 +30,9 @@ public class Lifter {
         ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
 
         leftLiftMotor = new CANSparkMax(LIFT_LEFT_MOTOR, MotorType.kBrushless);
-        util.configure("Lift L", leftLiftMotor, 40, false, tab);
+        util.configure("Lift L", leftLiftMotor, 40, 0, false, tab);
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
-        util.configure("Lift R", rightLiftMotor, 40, false, tab);
+        util.configure("Lift R", rightLiftMotor, 40, 0, false, tab);
     }
 
     // Configuration

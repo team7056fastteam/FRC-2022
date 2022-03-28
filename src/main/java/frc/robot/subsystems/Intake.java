@@ -34,10 +34,10 @@ public class Intake {
         ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
 
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);
-        util.configure("Intake", rollerMotor, 40, false, tab);
+        util.configure("Intake", rollerMotor, 40, 0, false, tab);
         conveyorMotor = new CANSparkMax(INTAKE_CONVEYOR_MOTOR, MotorType.kBrushless);
-        util.configure("Conveyor", conveyorMotor, 40, false, tab);
-        
+        util.configure("Conveyor", conveyorMotor, 40, 0, false, tab);
+
         intakeSwitch = new DigitalInput(INTAKE_LIMIT_SWITCH);
         conveyorSwitch = new DigitalInput(CONVEYOR_LIMIT_SWITCH);
     }

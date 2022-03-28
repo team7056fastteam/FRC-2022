@@ -30,9 +30,9 @@ public class Shooter {
         ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
 
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
-        util.configure("Shooter L", leftShooterMotor, 40, false, tab);
+        util.configure("Shooter L", leftShooterMotor, 40, 0, false, tab);
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
-        util.configure("Shooter R", rightShooterMotor, 40, false, tab);
+        util.configure("Shooter R", rightShooterMotor, 40, 0, false, tab);
     }
 
     /** Configuration */
