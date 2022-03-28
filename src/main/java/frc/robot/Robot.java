@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.*;
 import frc.robot.utils.Utilities;
 
@@ -19,12 +22,24 @@ public class Robot extends TimedRobot {
     Intake _intake;
     Lifter _lifter;
     Shooter _shooter;
-    Limelight _limelight;
     NavPod _navpod;
 
+    // Instance variables
     char auton = 'a';
-    double gyroRotation = 0;
-    double t = 0;
+    double gyroRotation = 0.0;
+    double steer = 0.0;
+    double t = 0.0;
+    float STEER_K = 0.009f;
+
+    // Drive variables
+    double driveX;
+    double driveY;
+    double driveZ;
+
+    // Limelight
+    NetworkTable table;
+    NetworkTableEntry tx;
+    NetworkTableEntry tv;
 
     private final Timer timer = new Timer();
     XboxController driver = new XboxController(0);
@@ -75,9 +90,13 @@ public class Robot extends TimedRobot {
         _intake = new Intake(this);
         _lifter = new Lifter(this);
         _shooter = new Shooter(this);
-        _limelight = new Limelight(this);
 
-        _limelight.robotInit();
+        // Initialize Limelight
+        table = NetworkTableInstance.getDefault().getTable("limelight");
+        tx = table.getEntry("tx");
+        tv = table.getEntry("tv");
+
+        setLimelight(false);
     }
 
     private double modifyAxis(double value) {
@@ -129,24 +148,26 @@ public class Robot extends TimedRobot {
     }
 
     public void autonA() {
-        if (t > 0 && t < 2) {
+        if (t > 0 && t < 1) {
+            stop();
+        } else if (t > 1 && t < 3) {
             _drive.drive(new ChassisSpeeds(
                     modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
-        } else if (t > 2 && t < 5) {
+        } else if (t > 3 && t < 6) {
             _drive.drive(new ChassisSpeeds(
                     -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
-        } else if (t > 5 && t < 5.5) {
+        } else if (t > 6 && t < 6.5) {
             stop();
             _intake.stop();
-        } else if (t > 5.5 && t < 7) {
+        } else if (t > 6.5 && t < 8) {
             _shooter.runShooter();
             _intake.forceRunConv();
             stop();
@@ -158,24 +179,26 @@ public class Robot extends TimedRobot {
     }
 
     public void autonB() {
-        if (t > 0 && t < 2) {
+        if (t > 0 && t < 1) {
+            stop();
+        } else if (t > 1 && t < 3) {
             _drive.drive(new ChassisSpeeds(
                     modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
-        } else if (t > 2 && t < 3.5) {
+        } else if (t > 3 && t < 4.5) {
             _drive.drive(new ChassisSpeeds(
                     -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
-        } else if (t > 3.5 && t < 4) {
+        } else if (t > 4.5 && t < 5) {
             stop();
             _intake.stop();
-        } else if (t > 4 && t < 6.5) {
+        } else if (t > 5 && t < 7.5) {
             _shooter.forceRunShooter();
             _intake.forceRunConv();
             stop();
@@ -195,27 +218,47 @@ public class Robot extends TimedRobot {
             xT = 0.65;
         }
 
-        // Check for drsiver RB pressed
+        // Check for driver RT pressed
         if (driver.getRightTriggerAxis() > 0.1) {
-
             // Zero the NavPod gyroscope
             setGyroscopeHeading(0);
         }
 
-        double xPercent = -modifyAxis((driver.getRightY() * 0.65) * xT);
-        double yPercent = -modifyAxis((driver.getRightX() * 0.65) * xT);
-        double zPercent = -modifyAxis((driver.getLeftX() * 0.65) * xT);
+        if (driver.getLeftBumper()) {
+            _drive.lock();
+        }
+
+        // Check for driver LT pressed
+        if (driver.getLeftTriggerAxis() > 0.1) {
+            setLimelight(true);
+
+            double x = tx.getDouble(0.0);
+            double v = tv.getDouble(0.0);
+
+            // Check for a valid target
+            if (v < 1.0) {
+                steer = 0.0;
+                return;
+            }
+
+            driveX = 0;
+            driveY = 0;
+            driveZ = x * STEER_K;
+        } else {
+            driveX = (driver.getRightY() * 0.65) * xT;
+            driveY = (driver.getRightX() * 0.65) * xT;
+            driveZ = (driver.getLeftX() * 0.65) * xT;
+
+            // Reset limelight
+            setLimelight(false);
+        }
 
         // Robot Oriented Drive
         _drive.drive(
                 new ChassisSpeeds(
-                        xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                        yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                        zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-
-        if (driver.getLeftBumper()) {
-            _drive.lock();
-        }
+                        -modifyAxis(driveX) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                        -modifyAxis(driveY) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                        -modifyAxis(driveZ) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
         // Field Oriented Drive
         /*
@@ -228,7 +271,6 @@ public class Robot extends TimedRobot {
          */
 
         // Send commands to other classes
-        _limelight.teleopPeriodic();
         _lifter.teleopPeriodic();
         _intake.teleopPeriodic();
         _shooter.teleopPeriodic();
@@ -259,6 +301,15 @@ public class Robot extends TimedRobot {
         _navpod.resetXY(x, y);
     }
 
+    /** This function sets the LEDs for the Limelight */
+    public void setLimelight(boolean ledMode) {
+        if (ledMode == true) {
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+        } else {
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+        }
+    }
+
     /** This function stops the drivetrain */
     public void stop() {
         _drive.drive(new ChassisSpeeds(0, 0, 0));
@@ -269,6 +320,6 @@ public class Robot extends TimedRobot {
         stop();
 
         // Disable Limelight
-        _limelight.disabledInit();
+        setLimelight(false);
     }
 }
