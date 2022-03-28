@@ -7,7 +7,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
+import frc.robot.utils.Utilities;
 
 import static frc.robot.utils.Constants.*;
 
@@ -19,6 +22,7 @@ public class Intake {
 
     Spark LED = new Spark(0);
     XboxController operator = new XboxController(1);
+    Utilities util = new Utilities();
 
     private final CANSparkMax rollerMotor;
     private final CANSparkMax conveyorMotor;
@@ -27,12 +31,13 @@ public class Intake {
 
     public Intake(Robot _robot) {
         robot = _robot;
+        ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
 
         rollerMotor = new CANSparkMax(INTAKE_ROLLER_MOTOR, MotorType.kBrushless);
+        util.configure("Intake", rollerMotor, 40, false, tab);
         conveyorMotor = new CANSparkMax(INTAKE_CONVEYOR_MOTOR, MotorType.kBrushless);
-        rollerMotor.burnFlash();
-        conveyorMotor.burnFlash();
-
+        util.configure("Conveyor", conveyorMotor, 40, false, tab);
+        
         intakeSwitch = new DigitalInput(INTAKE_LIMIT_SWITCH);
         conveyorSwitch = new DigitalInput(CONVEYOR_LIMIT_SWITCH);
     }
@@ -44,7 +49,6 @@ public class Intake {
 
     /** This function is called periodically during operator control. */
     public void teleopPeriodic() {
-
         // Conveyor control
         if (operator.getLeftTriggerAxis() > 0.2) {
             runRoller(0);

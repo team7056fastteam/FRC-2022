@@ -53,7 +53,7 @@ public class Limelight {
             @SuppressWarnings("unused")
             double steerVal = x * STEER_K;
 
-            //robot.aimAtTarget(x * STEER_K);
+            // robot.aimAtTarget(x * STEER_K);
         }
 
         // Reset limelight
@@ -65,8 +65,7 @@ public class Limelight {
     public void setLED(boolean mode) {
         if (mode == true) {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-        }
-        else {
+        } else {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
         }
     }

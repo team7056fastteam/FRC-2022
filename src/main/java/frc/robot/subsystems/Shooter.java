@@ -5,13 +5,19 @@
 package frc.robot.subsystems;
 
 import frc.robot.Robot;
-import static frc.robot.utils.Constants.*;
+import frc.robot.utils.Utilities;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
+import static frc.robot.utils.Constants.*;
 
 public class Shooter {
     private Robot _robot;
+    Utilities util = new Utilities();
 
     XboxController operator = new XboxController(1);
     double currentTime;
@@ -19,11 +25,14 @@ public class Shooter {
     private final CANSparkMax leftShooterMotor;
     private final CANSparkMax rightShooterMotor;
 
-    public Shooter(Robot robot)
-    {
+    public Shooter(Robot robot) {
         _robot = robot;
+        ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
+
         leftShooterMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
+        util.configure("Shooter L", leftShooterMotor, 40, false, tab);
         rightShooterMotor = new CANSparkMax(SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
+        util.configure("Shooter R", rightShooterMotor, 40, false, tab);
     }
 
     /** Configuration */
@@ -36,15 +45,13 @@ public class Shooter {
         // Check input from right trigger
         if (operator.getRightTriggerAxis() > 0.2) {
             runShooter();
-        }
-        else {
+        } else {
             stop();
         }
 
         if (operator.getRightBumper()) {
             mode = true;
-        }
-        else {
+        } else {
             mode = false;
         }
     }
@@ -54,8 +61,7 @@ public class Shooter {
             // Run shooter at high speed
             leftShooterMotor.set(_robot.invert(highSpeed));
             rightShooterMotor.set(highSpeed);
-        }
-        else {
+        } else {
             // Run shooter at low speed
             leftShooterMotor.set(_robot.invert(lowSpeed));
             rightShooterMotor.set(lowSpeed);

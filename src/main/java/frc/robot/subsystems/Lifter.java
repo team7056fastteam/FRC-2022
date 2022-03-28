@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Robot;
+import frc.robot.utils.Utilities;
 
 import static frc.robot.utils.Constants.*;
 
@@ -12,23 +13,26 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class Lifter {
     private Robot _robot;
+    Utilities util = new Utilities();
 
     private final CANSparkMax leftLiftMotor;
     private final CANSparkMax rightLiftMotor;
-    
+
     XboxController operator = new XboxController(1);
 
-    public Lifter(Robot robot)
-    {
+    public Lifter(Robot robot) {
         _robot = robot;
+        ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
 
         leftLiftMotor = new CANSparkMax(LIFT_LEFT_MOTOR, MotorType.kBrushless);
+        util.configure("Lift L", leftLiftMotor, 40, false, tab);
         rightLiftMotor = new CANSparkMax(LIFT_RIGHT_MOTOR, MotorType.kBrushless);
-        leftLiftMotor.burnFlash();
-        rightLiftMotor.burnFlash();
+        util.configure("Lift R", rightLiftMotor, 40, false, tab);
     }
 
     // Configuration
@@ -40,12 +44,10 @@ public class Lifter {
         if (operator.getRawButton(3)) {
             leftLiftMotor.set(_robot.invert(liftSpeed));
             rightLiftMotor.set(_robot.invert(liftSpeed));
-        }
-        else if (operator.getRawButton(4)) {
+        } else if (operator.getRawButton(4)) {
             leftLiftMotor.set(liftSpeed);
             rightLiftMotor.set(liftSpeed);
-        }
-        else {
+        } else {
             leftLiftMotor.set(0.0);
             rightLiftMotor.set(0.0);
         }
