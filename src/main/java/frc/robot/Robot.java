@@ -245,20 +245,20 @@ public class Robot extends TimedRobot {
             driveY = 0;
             driveZ = x * STEER_K;
         } else {
-            driveX = (driver.getRightY() * 0.65) * xT;
-            driveY = (driver.getRightX() * 0.65) * xT;
-            driveZ = (driver.getLeftX() * 0.65) * xT;
+            driveX = -modifyAxis((driver.getRightY() * 0.75) * xT);
+            driveY = -modifyAxis((driver.getRightX() * 0.75) * xT);
+            driveZ = -modifyAxis((driver.getLeftX() * 0.70) * xT);
 
             // Reset limelight
             setLimelight(false);
         }
-
+        
         // Robot Oriented Drive
         _drive.drive(
                 new ChassisSpeeds(
-                        -modifyAxis(driveX) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                        -modifyAxis(driveY) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                        -modifyAxis(driveZ) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+                        driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                        driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                        driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
         // Field Oriented Drive
         /*
