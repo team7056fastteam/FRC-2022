@@ -221,6 +221,11 @@ public class Robot extends TimedRobot {
         }
     }
 
+    @Override
+    public void teleopInit() {
+        setLimelightCamera(false);
+    }
+
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
@@ -228,12 +233,6 @@ public class Robot extends TimedRobot {
         double xT = 1.0;
         if (driver.getRightBumper()) {
             xT = 0.65;
-        }
-
-        // Check for driver RT pressed
-        if (driver.getRightTriggerAxis() > 0.1) {
-            // Zero the NavPod gyroscope
-            setGyroscopeHeading(0);
         }
 
         // Check for driver LT pressed
@@ -250,12 +249,15 @@ public class Robot extends TimedRobot {
 
             // Reset limelight
             setLimelight(false);
+            setLimelightCamera(false);
         }
 
         // Check if LB is pressed
         if (driver.getLeftBumper()) {
             _drive.lock();
         }
+
+        // Robot-oriented Drive
         else {
             _drive.drive(
                 new ChassisSpeeds(
@@ -272,6 +274,7 @@ public class Robot extends TimedRobot {
 
     public void trackTarget() {
         setLimelight(true);
+        setLimelightCamera(true);
 
             double x = tx.getDouble(0.0);
             double v = tv.getDouble(0.0);
@@ -315,11 +318,19 @@ public class Robot extends TimedRobot {
     }
 
     /** This function sets the LEDs for the Limelight */
-    public void setLimelight(boolean ledMode) {
-        if (ledMode == true) {
+    public void setLimelight(boolean mode) {
+        if (mode == true) {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
         } else {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+        }
+    }
+
+    public void setLimelightCamera(boolean mode) {
+        if (mode == true) {
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
+        } else {
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
         }
     }
 
