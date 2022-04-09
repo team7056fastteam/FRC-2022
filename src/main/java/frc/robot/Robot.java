@@ -246,15 +246,6 @@ public class Robot extends TimedRobot {
             xT = 0.65;
         }
 
-<<<<<<< HEAD
-=======
-        // Check for driver RT pressed
-        if (driver.getRightTriggerAxis() > 0.1) {
-            // Zero the NavPod gyroscope
-            setGyroscopeHeading(0);
-        }
-
->>>>>>> 3d7d2e40a48a346de1c7947fcd066d2cdc3a44a6
         // Check for driver LT pressed
         if (driver.getLeftTriggerAxis() > 0.1) {
             trackTarget();
@@ -294,8 +285,6 @@ public class Robot extends TimedRobot {
                             _drive.getRotation()));
             */
         }
-<<<<<<< HEAD
-=======
 
         // Check if LB is pressed
         if (driver.getLeftBumper()) {
@@ -308,7 +297,6 @@ public class Robot extends TimedRobot {
                             driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                             driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
         }
->>>>>>> 3d7d2e40a48a346de1c7947fcd066d2cdc3a44a6
 
         // Send commands to other classes
         _lifter.teleopPeriodic();
