@@ -24,7 +24,7 @@ import frc.robot.utils.Constants;
 
 public class Drivetrain {
 
-        private Robot _robot;
+        private Robot _robot = new Robot();
 
         private static final double MAX_VOLTAGE = 15.0;
         public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.14528;

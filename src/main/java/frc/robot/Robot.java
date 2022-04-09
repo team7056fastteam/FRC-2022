@@ -224,10 +224,6 @@ public class Robot extends TimedRobot {
             setGyroscopeHeading(0);
         }
 
-        if (driver.getLeftBumper()) {
-            _drive.lock();
-        }
-
         // Check for driver LT pressed
         if (driver.getLeftTriggerAxis() > 0.1) {
             setLimelight(true);
@@ -235,15 +231,20 @@ public class Robot extends TimedRobot {
             double x = tx.getDouble(0.0);
             double v = tv.getDouble(0.0);
 
+            driveX = 0;
+            driveY = 0;
+
             // Check for a valid target
             if (v < 1.0) {
                 steer = 0.0;
+                driveZ = 0.0;
+                System.out.println("ATTEMPTING TO TARGET");
                 return;
             }
 
-            driveX = 0;
-            driveY = 0;
             driveZ = x * STEER_K;
+
+            System.out.println("TARGETING");
         } else {
             driveX = -modifyAxis((driver.getRightY() * 0.75) * xT);
             driveY = -modifyAxis((driver.getRightX() * 0.75) * xT);
@@ -252,23 +253,18 @@ public class Robot extends TimedRobot {
             // Reset limelight
             setLimelight(false);
         }
-        
-        // Robot Oriented Drive
-        _drive.drive(
+
+        // Check if LB is pressed
+        if (driver.getLeftBumper()) {
+            _drive.lock();
+        }
+        else {
+            _drive.drive(
                 new ChassisSpeeds(
                         driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                         driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                         driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-
-        // Field Oriented Drive
-        /*
-         * _drive.drive(
-         * ChassisSpeeds.fromFieldRelativeSpeeds(
-         * xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-         * yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-         * zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-         * _drive.getRotation()));
-         */
+        }
 
         // Send commands to other classes
         _lifter.teleopPeriodic();
