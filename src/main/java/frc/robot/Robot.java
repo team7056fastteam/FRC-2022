@@ -129,6 +129,8 @@ public class Robot extends TimedRobot {
         timer.start();
         t = 0;
 
+        setLimelightCamera(true);
+
         stop();
     }
 
@@ -152,14 +154,14 @@ public class Robot extends TimedRobot {
             stop();
         } else if (t > 1 && t < 3) {
             _drive.drive(new ChassisSpeeds(
-                    modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    modifyAxis(0.4) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
         } else if (t > 3 && t < 6) {
             _drive.drive(new ChassisSpeeds(
-                    -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0.4) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
@@ -189,27 +191,36 @@ public class Robot extends TimedRobot {
             stop();
         } else if (t > 1 && t < 3) {
             _drive.drive(new ChassisSpeeds(
-                    modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    modifyAxis(0.4) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
         } else if (t > 3 && t < 4.5) {
             _drive.drive(new ChassisSpeeds(
-                    -modifyAxis(0.55) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0.4) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
             _intake.runConv();
             _intake.forceRunRoller();
         } else if (t > 4.5 && t < 5) {
+            setLimelight(true);
+
+            steer = tx.getDouble(0.0) * STEER_K;
+            System.out.println(steer);
+
             stop();
             _intake.stop();
         } else if (t > 5.5 && t < 6.5) {
-            trackTarget();
+            setLimelight(true);
+
+            steer = tx.getDouble(0.0) * STEER_K;
+            System.out.println(steer);
+
             _drive.drive(new ChassisSpeeds(
-                    -modifyAxis(0.0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                     -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                    -modifyAxis(steer) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(steer * 4) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
         } else if (t > 6.5 && t < 8.5) {
             _shooter.forceRunShooter();
             _intake.forceRunConv();
@@ -241,15 +252,15 @@ public class Robot extends TimedRobot {
 
             driveX = 0.0;
             driveY = 0.0;
-            driveZ = steer;
+            driveZ = -1 * steer;
         } else {
             driveX = -modifyAxis((driver.getRightY() * 0.75) * xT);
             driveY = -modifyAxis((driver.getRightX() * 0.75) * xT);
-            driveZ = -modifyAxis((driver.getLeftX() * 0.70) * xT);
+            driveZ = -modifyAxis((driver.getLeftX() * 0.65) * xT);
 
             // Reset limelight
             setLimelight(false);
-            setLimelightCamera(false);
+            // setLimelightCamera(false);
         }
 
         // Check if LB is pressed
@@ -259,11 +270,20 @@ public class Robot extends TimedRobot {
 
         // Robot-oriented Drive
         else {
+            
             _drive.drive(
-                new ChassisSpeeds(
-                        driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                        driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                        driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+                    new ChassisSpeeds(
+                            driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                            driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                            driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+            /*
+            _drive.drive(
+                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                            driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                            driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                            driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+                            _drive.getRotation()));
+            */
         }
 
         // Send commands to other classes
@@ -274,22 +294,22 @@ public class Robot extends TimedRobot {
 
     public void trackTarget() {
         setLimelight(true);
-        setLimelightCamera(true);
+        // setLimelightCamera(true);
 
-            double x = tx.getDouble(0.0);
-            double v = tv.getDouble(0.0);
+        double x = tx.getDouble(0.0);
+        double v = tv.getDouble(0.0);
 
-            driveX = 0;
-            driveY = 0;
+        driveX = 0;
+        driveY = 0;
 
-            // Check for a valid target
-            if (v < 1.0) {
-                System.out.println("ATTEMPTING TO TARGET");
-                steer = 0.0;
-            }
+        // Check for a valid target
+        if (v < 1.0) {
+            System.out.println("ATTEMPTING TO TARGET");
+            steer = 0.0;
+        }
 
-            steer = x * STEER_K;
-            System.out.println("TARGETING");
+        steer = x * STEER_K;
+        System.out.println("TARGETING");
     }
 
     /** This function reverts motor speeds without error */
