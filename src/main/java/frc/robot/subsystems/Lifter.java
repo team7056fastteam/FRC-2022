@@ -13,12 +13,15 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class Lifter {
     private Robot _robot;
     Utilities util = new Utilities();
+
+    Spark LED = new Spark(0);
 
     private final CANSparkMax leftLiftMotor;
     private final CANSparkMax rightLiftMotor;
@@ -44,12 +47,18 @@ public class Lifter {
         if (operator.getRawButton(3)) {
             leftLiftMotor.set(_robot.invert(liftSpeed));
             rightLiftMotor.set(_robot.invert(liftSpeed));
+            
+            LED.set(-0.97);
         } else if (operator.getRawButton(4)) {
             leftLiftMotor.set(liftSpeed);
             rightLiftMotor.set(liftSpeed);
+
+            LED.set(-0.97);
         } else {
             leftLiftMotor.set(0.0);
             rightLiftMotor.set(0.0);
+
+            LED.set(0.91);
         }
 
         // Conveyor override controls

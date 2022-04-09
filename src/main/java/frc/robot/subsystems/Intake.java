@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
@@ -20,7 +19,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Intake {
     private Robot robot;
 
-    Spark LED = new Spark(0);
     XboxController operator = new XboxController(1);
     Utilities util = new Utilities();
 
