@@ -224,10 +224,6 @@ public class Robot extends TimedRobot {
             setGyroscopeHeading(0);
         }
 
-        if (driver.getLeftBumper()) {
-            _drive.lock();
-        }
-
         // Check for driver LT pressed
         if (driver.getLeftTriggerAxis() > 0.1) {
             setLimelight(true);
@@ -252,7 +248,7 @@ public class Robot extends TimedRobot {
             // Reset limelight
             setLimelight(false);
         }
-        
+
         // Robot Oriented Drive
         _drive.drive(
                 new ChassisSpeeds(
@@ -260,15 +256,9 @@ public class Robot extends TimedRobot {
                         driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                         driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
-        // Field Oriented Drive
-        /*
-         * _drive.drive(
-         * ChassisSpeeds.fromFieldRelativeSpeeds(
-         * xPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-         * yPercent * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-         * zPercent * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-         * _drive.getRotation()));
-         */
+        if (driver.getLeftBumper()) {
+            _drive.lock();
+        }
 
         // Send commands to other classes
         _lifter.teleopPeriodic();
