@@ -249,15 +249,16 @@ public class Robot extends TimedRobot {
             setLimelight(false);
         }
 
-        // Robot Oriented Drive
-        _drive.drive(
-                new ChassisSpeeds(
-                        driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                        driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                        driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-
+        // Check if LB is pressed
         if (driver.getLeftBumper()) {
             _drive.lock();
+        } else {
+            // Robot Oriented Drive
+            _drive.drive(
+                    new ChassisSpeeds(
+                            driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                            driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                            driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
         }
 
         // Send commands to other classes
