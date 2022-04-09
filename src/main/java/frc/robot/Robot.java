@@ -167,7 +167,13 @@ public class Robot extends TimedRobot {
         } else if (t > 6 && t < 6.5) {
             stop();
             _intake.stop();
-        } else if (t > 6.5 && t < 8) {
+        } else if (t > 6.5 && t < 7.5) {
+            trackTarget();
+            _drive.drive(new ChassisSpeeds(
+                    -modifyAxis(0.0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(steer) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+        } else if (t > 7.5 && t < 9) {
             _shooter.runShooter();
             _intake.forceRunConv();
             stop();
@@ -198,7 +204,13 @@ public class Robot extends TimedRobot {
         } else if (t > 4.5 && t < 5) {
             stop();
             _intake.stop();
-        } else if (t > 5 && t < 7.5) {
+        } else if (t > 5.5 && t < 6.5) {
+            trackTarget();
+            _drive.drive(new ChassisSpeeds(
+                    -modifyAxis(0.0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(steer) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+        } else if (t > 6.5 && t < 8.5) {
             _shooter.forceRunShooter();
             _intake.forceRunConv();
             stop();
@@ -226,25 +238,11 @@ public class Robot extends TimedRobot {
 
         // Check for driver LT pressed
         if (driver.getLeftTriggerAxis() > 0.1) {
-            setLimelight(true);
+            trackTarget();
 
-            double x = tx.getDouble(0.0);
-            double v = tv.getDouble(0.0);
-
-            driveX = 0;
-            driveY = 0;
-
-            // Check for a valid target
-            if (v < 1.0) {
-                steer = 0.0;
-                driveZ = 0.0;
-                System.out.println("ATTEMPTING TO TARGET");
-                return;
-            }
-
-            driveZ = x * STEER_K;
-
-            System.out.println("TARGETING");
+            driveX = 0.0;
+            driveY = 0.0;
+            driveZ = steer;
         } else {
             driveX = -modifyAxis((driver.getRightY() * 0.75) * xT);
             driveY = -modifyAxis((driver.getRightX() * 0.75) * xT);
@@ -270,6 +268,25 @@ public class Robot extends TimedRobot {
         _lifter.teleopPeriodic();
         _intake.teleopPeriodic();
         _shooter.teleopPeriodic();
+    }
+
+    public void trackTarget() {
+        setLimelight(true);
+
+            double x = tx.getDouble(0.0);
+            double v = tv.getDouble(0.0);
+
+            driveX = 0;
+            driveY = 0;
+
+            // Check for a valid target
+            if (v < 1.0) {
+                System.out.println("ATTEMPTING TO TARGET");
+                steer = 0.0;
+            }
+
+            steer = x * STEER_K;
+            System.out.println("TARGETING");
     }
 
     /** This function reverts motor speeds without error */
