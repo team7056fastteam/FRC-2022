@@ -114,10 +114,13 @@ public class Robot extends TimedRobot {
         // Allow autonomous selection
         if (operator.getAButton()) {
             auton = 'a';
-            System.out.println("Red/Blue Lower Goal");
+            System.out.println("Low Goal Auton");
         } else if (operator.getBButton()) {
             auton = 'b';
-            System.out.println("Red/Blue High Goal");
+            System.out.println("High Goal Auton - Closer");
+        } else if (operator.getXButton()) {
+            auton = 'c';
+            System.out.println("High Goal Auton - Farther");
         }
     }
 
@@ -130,6 +133,7 @@ public class Robot extends TimedRobot {
         t = 0;
 
         setLimelightCamera(true);
+        setLimelight(false);
 
         stop();
     }
@@ -143,9 +147,11 @@ public class Robot extends TimedRobot {
             autonA();
         } else if (auton == 'b') {
             autonB();
+        } else if (auton == 'c') {
+            autonC();
         } else {
             // Default to auton mode A at startup
-            auton = 'a';
+            auton = 'b';
         }
     }
 
@@ -232,9 +238,56 @@ public class Robot extends TimedRobot {
         }
     }
 
+    public void autonC() {
+        if (t > 0 && t < 1) {
+            stop();
+        } else if (t > 1 && t < 3) {
+            _drive.drive(new ChassisSpeeds(
+                    modifyAxis(0.4) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+            _intake.runConv();
+            _intake.forceRunRoller();
+        } else if (t > 3 && t < 4.15) {
+            _drive.drive(new ChassisSpeeds(
+                    -modifyAxis(0.4) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+            _intake.runConv();
+            _intake.forceRunRoller();
+        } else if (t > 4.15 && t < 5) {
+            setLimelight(true);
+
+            steer = tx.getDouble(0.0) * STEER_K;
+            System.out.println(steer);
+
+            stop();
+            _intake.stop();
+        } else if (t > 5.5 && t < 6.5) {
+            setLimelight(true);
+
+            steer = tx.getDouble(0.0) * STEER_K;
+            System.out.println(steer);
+
+            _drive.drive(new ChassisSpeeds(
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(steer * 4) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+        } else if (t > 6.5 && t < 8.5) {
+            _shooter.forceRunShooter();
+            _intake.forceRunConv();
+            stop();
+        } else {
+            stop();
+            _intake.stop();
+            _shooter.stop();
+        }
+    }
+
     @Override
     public void teleopInit() {
-        setLimelightCamera(false);
+        setLimelightCamera(true);
+        setLimelight(false);
     }
 
     /** This function is called periodically during operator control. */
@@ -260,17 +313,13 @@ public class Robot extends TimedRobot {
 
             // Reset limelight
             setLimelight(false);
-            // setLimelightCamera(false);
         }
 
         // Check if LB is pressed
         if (driver.getLeftBumper()) {
             _drive.lock();
         }
-
-        // Robot-oriented Drive
         else {
-            
             _drive.drive(
                     new ChassisSpeeds(
                             driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
@@ -286,18 +335,6 @@ public class Robot extends TimedRobot {
             */
         }
 
-        // Check if LB is pressed
-        if (driver.getLeftBumper()) {
-            _drive.lock();
-        } else {
-            // Robot Oriented Drive
-            _drive.drive(
-                    new ChassisSpeeds(
-                            driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                            driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                            driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-        }
-
         // Send commands to other classes
         _lifter.teleopPeriodic();
         _intake.teleopPeriodic();
@@ -306,7 +343,6 @@ public class Robot extends TimedRobot {
 
     public void trackTarget() {
         setLimelight(true);
-        // setLimelightCamera(true);
 
         double x = tx.getDouble(0.0);
         double v = tv.getDouble(0.0);
