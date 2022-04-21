@@ -289,6 +289,10 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         setLimelightCamera(true);
         setLimelight(false);
+
+        setDefaultPosition(0, 0);
+        setGyroscopeHeading(0);
+        _drive.zeroGyroscope();
     }
 
     /** This function is called periodically during operator control. */
@@ -308,9 +312,9 @@ public class Robot extends TimedRobot {
             driveY = 0.0;
             driveZ = -1 * steer;
         } else {
-            driveX = -modifyAxis((driver.getRawAxis(3) * 0.75) * xT);
-            driveY = -modifyAxis((driver.getRawAxis(4) * 0.75) * xT);
-            driveZ = -modifyAxis((driver.getRawAxis(0) * 0.65) * xT);
+            driveX = -modifyAxis((driver.getRawAxis(1)) * xT * -1);
+            driveY = -modifyAxis((driver.getRawAxis(0)) * xT);
+            driveZ = -modifyAxis((driver.getRawAxis(3)) * xT);
 
             // Reset limelight
             setLimelight(false);
@@ -321,19 +325,20 @@ public class Robot extends TimedRobot {
             _drive.lock();
         }
         else {
+            /*
             _drive.drive(
                     new ChassisSpeeds(
-                            driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+                            driveX * +Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                             driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                             driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-            /*
+            */
             _drive.drive(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                             driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                             driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                             driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                             _drive.getRotation()));
-            */
+            
         }
 
         // Send commands to other classes
