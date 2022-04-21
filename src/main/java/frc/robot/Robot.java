@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -42,7 +43,7 @@ public class Robot extends TimedRobot {
     NetworkTableEntry tv;
 
     private final Timer timer = new Timer();
-    XboxController driver = new XboxController(0);
+    Joystick driver = new Joystick(0);
     XboxController operator = new XboxController(1);
 
     /**
@@ -295,28 +296,28 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         // Check for driver RT held/pressed
         double xT = 1.0;
-        if (driver.getRightBumper()) {
+        if (driver.getRawButton(12)) {
             xT = 0.65;
         }
 
         // Check for driver LT pressed
-        if (driver.getLeftTriggerAxis() > 0.1) {
+        if (driver.getRawButton(13)) {
             trackTarget();
 
             driveX = 0.0;
             driveY = 0.0;
             driveZ = -1 * steer;
         } else {
-            driveX = -modifyAxis((driver.getRightY() * 0.75) * xT);
-            driveY = -modifyAxis((driver.getRightX() * 0.75) * xT);
-            driveZ = -modifyAxis((driver.getLeftX() * 0.65) * xT);
+            driveX = -modifyAxis((driver.getRawAxis(3) * 0.75) * xT);
+            driveY = -modifyAxis((driver.getRawAxis(4) * 0.75) * xT);
+            driveZ = -modifyAxis((driver.getRawAxis(0) * 0.65) * xT);
 
             // Reset limelight
             setLimelight(false);
         }
 
         // Check if LB is pressed
-        if (driver.getLeftBumper()) {
+        if (driver.getRawButton(1)) {
             _drive.lock();
         }
         else {
