@@ -18,31 +18,27 @@ import frc.robot.utils.Utilities;
 
 public class Robot extends TimedRobot {
 
-    // Subsystems
+    // Class constructors for subsystems
     Drivetrain _drive;
     Intake _intake;
     Lifter _lifter;
     Shooter _shooter;
     NavPod _navpod;
 
-    // Instance variables
+    // Initialize variables
     char auton = 'a';
     double gyroRotation = 0.0;
     double steer = 0.0;
     double t = 0.0;
-    float STEER_K = 0.009f;
-
-    // Drive variables
+    float STEER_K = 0.009f; // Limelight sensitivity value
     double driveX;
     double driveY;
     double driveZ;
-
-    // Limelight
     NetworkTable table;
     NetworkTableEntry tx;
     NetworkTableEntry tv;
 
-    private final Timer timer = new Timer();
+    Timer timer = new Timer();
     Joystick driver = new Joystick(0);
     XboxController operator = new XboxController(1);
 
@@ -96,7 +92,6 @@ public class Robot extends TimedRobot {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         tx = table.getEntry("tx");
         tv = table.getEntry("tv");
-
         setLimelight(false);
     }
 
@@ -133,6 +128,7 @@ public class Robot extends TimedRobot {
         timer.start();
         t = 0;
 
+        // Set limelight settings at the beginning of auton
         setLimelightCamera(true);
         setLimelight(false);
 
@@ -287,9 +283,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        // Set limelight settings at beginning of teleop
         setLimelightCamera(true);
         setLimelight(false);
 
+        // Zero robot position
         setDefaultPosition(0, 0);
         setGyroscopeHeading(0);
         _drive.zeroGyroscope();
@@ -323,22 +321,25 @@ public class Robot extends TimedRobot {
         // Check if LB is pressed
         if (driver.getRawButton(1)) {
             _drive.lock();
-        }
-        else {
+        } else {
+
+            // Robot Oriented Drive
             /*
-            _drive.drive(
-                    new ChassisSpeeds(
-                            driveX * +Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                            driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-                            driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-            */
+             * _drive.drive(
+             * new ChassisSpeeds(
+             * driveX * +Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+             * driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+             * driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+             */
+
+            // Field Oriented Drive
             _drive.drive(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                             driveX * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                             driveY * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
                             driveZ * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                             _drive.getRotation()));
-            
+
         }
 
         // Send commands to other classes
@@ -347,6 +348,7 @@ public class Robot extends TimedRobot {
         _shooter.teleopPeriodic();
     }
 
+    /** This function enables tracking with the limelight */
     public void trackTarget() {
         setLimelight(true);
 
@@ -358,12 +360,10 @@ public class Robot extends TimedRobot {
 
         // Check for a valid target
         if (v < 1.0) {
-            System.out.println("ATTEMPTING TO TARGET");
             steer = 0.0;
         }
 
         steer = x * STEER_K;
-        System.out.println("TARGETING");
     }
 
     /** This function reverts motor speeds without error */
@@ -391,7 +391,7 @@ public class Robot extends TimedRobot {
         _navpod.resetXY(x, y);
     }
 
-    /** This function sets the LEDs for the Limelight */
+    /** This function sets the LED mode for the Limelight */
     public void setLimelight(boolean mode) {
         if (mode == true) {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
@@ -400,6 +400,7 @@ public class Robot extends TimedRobot {
         }
     }
 
+    /** This function sets the camera mode for the Limelight */
     public void setLimelightCamera(boolean mode) {
         if (mode == true) {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
@@ -420,6 +421,4 @@ public class Robot extends TimedRobot {
         // Disable Limelight
         setLimelight(false);
     }
-
-    // Don't change the code, he said
 }
